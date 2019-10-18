@@ -1,2 +1,2 @@
-include ':app'
+include ':application'
 rootProject.name='Infinite Scroll Sample'
