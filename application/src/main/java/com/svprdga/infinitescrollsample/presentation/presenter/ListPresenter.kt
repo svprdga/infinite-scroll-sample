@@ -31,6 +31,8 @@ class ListPresenter(
 
         override fun onError(e: Throwable) {
             e.message?.let { log.error(it) }
+            view?.hideListLayout()
+            view?.showErrorLayout()
         }
     }
 
@@ -39,7 +41,7 @@ class ListPresenter(
     override fun bind(view: IListView) {
         this.view = view
 
-        // TODO
+        // Fetch first items.
         client.getPopularShows()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
