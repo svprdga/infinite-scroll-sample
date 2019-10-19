@@ -2,7 +2,7 @@ package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.svprdga.infinitescrollsample.data.repository.ShowRepository
 import com.svprdga.infinitescrollsample.di.annotations.PerUiComponent
-import com.svprdga.infinitescrollsample.domain.Show
+import com.svprdga.infinitescrollsample.domain.ShowData
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.util.Logger
@@ -18,14 +18,17 @@ class ListPresenter(
     // ****************************************** VARS ***************************************** //
 
     private var view: IListView? = null
+    private var currentPage = 1
+    private var isLastPage = false
 
-    private val popularShowsObserver = object : SingleObserver<List<Show>> {
+    private val popularShowsObserver = object : SingleObserver<ShowData> {
         override fun onSubscribe(d: Disposable) {
             // Nothing.
         }
 
-        override fun onSuccess(content: List<Show>) {
-            view?.showList(content)
+        override fun onSuccess(content: ShowData) {
+            isLastPage = content.isLastPage
+            view?.showList(content.shows)
         }
 
         override fun onError(e: Throwable) {
@@ -41,12 +44,20 @@ class ListPresenter(
         this.view = view
 
         // Fetch first items.
-        showRepository.findPopularShows(1)
+        showRepository.findPopularShows(currentPage)
             .subscribe(popularShowsObserver)
     }
 
     override fun unBind() {
         this.view = null
+    }
+
+    override fun loadNextShowSet() {
+        // Check that the next set exists
+        if (!isLastPage) {
+            showRepository.findPopularShows(++currentPage)
+                .subscribe(popularShowsObserver)
+        }
     }
 
 }

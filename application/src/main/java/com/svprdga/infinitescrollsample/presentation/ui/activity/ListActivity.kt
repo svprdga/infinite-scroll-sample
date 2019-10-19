@@ -7,10 +7,12 @@ import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
+import com.svprdga.infinitescrollsample.presentation.ui.extra.EndlessRecyclerViewScrollListener
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
 import com.svprdga.infinitescrollsample.util.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+import androidx.recyclerview.widget.RecyclerView
 
 class ListActivity : BaseActivity(), IListView {
 
@@ -20,6 +22,11 @@ class ListActivity : BaseActivity(), IListView {
     lateinit var log: Logger
     @Inject
     lateinit var presenter: IListPresenter
+
+    // ****************************************** VARS ***************************************** //
+
+    private lateinit var scrollListener: EndlessRecyclerViewScrollListener
+    private var shows: MutableList<Show> = mutableListOf()
 
     // *************************************** LIFECYCLE *************************************** //
 
@@ -32,6 +39,16 @@ class ListActivity : BaseActivity(), IListView {
         // Toolbar.
         setSupportActionBar(toolbar)
 
+        // Recylcer view set-up.
+        val linearLayoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = linearLayoutManager
+        scrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                presenter.loadNextShowSet()
+            }
+        }
+        recyclerView.addOnScrollListener(scrollListener)
+
         presenter.bind(this)
     }
 
@@ -43,11 +60,9 @@ class ListActivity : BaseActivity(), IListView {
     // ************************************* PUBLIC METHODS ************************************ //
 
     override fun showList(results: List<Show>) {
-        val manager = LinearLayoutManager(this)
+        shows.addAll(results)
         recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = manager
-            adapter = ShowListAdapter(results)
+            adapter = ShowListAdapter(shows)
         }
     }
 
@@ -61,5 +76,13 @@ class ListActivity : BaseActivity(), IListView {
 
     override fun hideErrorLayout() {
         errorLayout.visibility = View.GONE
+    }
+
+    override fun appendShows(newShows: List<Show>) {
+        shows.addAll(newShows)
+        recyclerView.apply {
+            adapter = ShowListAdapter(shows)
+            adapter?.notifyDataSetChanged()
+        }
     }
 }

@@ -27,4 +27,9 @@ interface IListView : IView {
      */
     fun hideErrorLayout()
 
+    /**
+     * Append a [List] of [Show] to the scrollable list.
+     */
+    fun appendShows(newShows: List<Show>)
+
 }
