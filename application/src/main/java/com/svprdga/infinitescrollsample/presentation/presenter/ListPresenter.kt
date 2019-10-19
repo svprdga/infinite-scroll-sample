@@ -25,7 +25,7 @@ class ListPresenter(
         }
 
         override fun onSuccess(content: List<Show>) {
-
+            view?.showList(content)
         }
 
         override fun onError(e: Throwable) {

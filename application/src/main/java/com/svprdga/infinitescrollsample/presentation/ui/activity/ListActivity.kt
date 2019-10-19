@@ -2,9 +2,12 @@ package com.svprdga.infinitescrollsample.presentation.ui.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.svprdga.infinitescrollsample.R
+import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
+import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
 import com.svprdga.infinitescrollsample.util.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -38,6 +41,15 @@ class ListActivity : BaseActivity(), IListView {
     }
 
     // ************************************* PUBLIC METHODS ************************************ //
+
+    override fun showList(results: List<Show>) {
+        val manager = LinearLayoutManager(this)
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = manager
+            adapter = ShowListAdapter(results)
+        }
+    }
 
     override fun hideListLayout() {
         listLayout.visibility = View.GONE
