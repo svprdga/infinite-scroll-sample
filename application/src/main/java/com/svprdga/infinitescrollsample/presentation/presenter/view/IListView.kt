@@ -5,9 +5,9 @@ import com.svprdga.infinitescrollsample.domain.Show
 interface IListView : IView {
 
     /**
-     * Display the list of [Show].
+     * Append a [List] of [Show] to the scrollable list.
      */
-    fun showList(results: List<Show>)
+    fun appendShows(newShows: List<Show>)
 
     /**
      * Hides the views associated with displaying the list.
@@ -26,10 +26,4 @@ interface IListView : IView {
      * Hides the error layout.
      */
     fun hideErrorLayout()
-
-    /**
-     * Append a [List] of [Show] to the scrollable list.
-     */
-    fun appendShows(newShows: List<Show>)
-
 }

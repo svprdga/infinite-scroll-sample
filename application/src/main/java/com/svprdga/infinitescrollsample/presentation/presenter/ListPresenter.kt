@@ -28,7 +28,7 @@ class ListPresenter(
 
         override fun onSuccess(content: ShowData) {
             isLastPage = content.isLastPage
-            view?.showList(content.shows)
+            view?.appendShows(content.shows)
         }
 
         override fun onError(e: Throwable) {

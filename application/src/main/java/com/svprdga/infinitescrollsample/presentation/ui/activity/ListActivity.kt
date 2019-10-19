@@ -59,10 +59,12 @@ class ListActivity : BaseActivity(), IListView {
 
     // ************************************* PUBLIC METHODS ************************************ //
 
-    override fun showList(results: List<Show>) {
-        shows.addAll(results)
+    override fun appendShows(newShows: List<Show>) {
+        shows.addAll(newShows)
+        val context = this
         recyclerView.apply {
-            adapter = ShowListAdapter(shows)
+            adapter = ShowListAdapter(context, shows)
+            adapter?.notifyItemRangeChanged(0, shows.size)
         }
     }
 
@@ -76,13 +78,5 @@ class ListActivity : BaseActivity(), IListView {
 
     override fun hideErrorLayout() {
         errorLayout.visibility = View.GONE
-    }
-
-    override fun appendShows(newShows: List<Show>) {
-        shows.addAll(newShows)
-        recyclerView.apply {
-            adapter = ShowListAdapter(shows)
-            adapter?.notifyDataSetChanged()
-        }
     }
 }

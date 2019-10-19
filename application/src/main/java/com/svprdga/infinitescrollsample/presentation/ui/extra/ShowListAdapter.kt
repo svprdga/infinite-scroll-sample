@@ -1,10 +1,13 @@
 package com.svprdga.infinitescrollsample.presentation.ui.extra
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 
@@ -18,17 +21,24 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         view.findViewById(R.id.overview)
     private val ratingTextView: TextView =
         view.findViewById(R.id.rating)
+    private val imageView: ImageView =
+        view.findViewById(R.id.thumbnail)
 
     // ************************************* PUBLIC METHODS ************************************ //
 
-    fun initializeView(show: Show) {
+    fun initializeView(show: Show, context: Context) {
         nameTextView.text = show.name
         overviewTextView.text = show.overview
         ratingTextView.text = show.averageRating.toString()
+
+        show.imagePath?.let {
+            Glide.with(context).load(show.imagePath).into(imageView)
+        }
     }
 }
 
 class ShowListAdapter(
+    private val context: Context,
     private val shows: List<Show>)
     : RecyclerView.Adapter<ShowViewHolder>() {
 
@@ -41,13 +51,12 @@ class ShowListAdapter(
     }
 
     override fun getItemCount(): Int {
+
         return shows.size
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
         val show = shows[position]
-        holder.initializeView(show)
+        holder.initializeView(show, context)
     }
-
-
 }

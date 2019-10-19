@@ -1,9 +1,7 @@
 package com.svprdga.infinitescrollsample.data.network.entity.mapper
 
 import com.svprdga.infinitescrollsample.data.network.entity.PopularShowsResponse
-import com.svprdga.infinitescrollsample.domain.Mockable
-import com.svprdga.infinitescrollsample.domain.Show
-import com.svprdga.infinitescrollsample.domain.ShowData
+import com.svprdga.infinitescrollsample.domain.*
 import io.reactivex.functions.Function
 
 @Mockable
@@ -14,7 +12,22 @@ class Mapper {
             val list: ArrayList<Show> = arrayListOf()
 
             for (entity in it.results) {
-                list.add(Show(entity.id, entity.name, entity.overview, entity.averageRating))
+
+                val imagePath = if (entity.imagePath != null) {
+                    "$IMAGE_URL$W92${entity.imagePath!!.substring(1)}"
+                } else {
+                    null
+                }
+
+                list.add(
+                    Show(
+                        entity.id,
+                        entity.name,
+                        entity.overview,
+                        entity.averageRating,
+                        imagePath
+                    )
+                )
             }
 
             ShowData(it.page, it.page >= it.totalPages, list)
