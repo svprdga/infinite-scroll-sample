@@ -2,6 +2,9 @@ package com.svprdga.infinitescrollsample.data.network.client
 
 import com.svprdga.infinitescrollsample.data.network.entity.ErrorEntity
 import com.svprdga.infinitescrollsample.data.network.entity.PopularShowsResponse
+import com.svprdga.infinitescrollsample.data.network.rx.scheduler.ISchedulerProvider
+import com.svprdga.infinitescrollsample.data.network.rx.scheduler.SchedulerProvider
+import com.svprdga.infinitescrollsample.data.network.rx.transformer.SingleWorkerTransformer
 import com.svprdga.infinitescrollsample.domain.Mockable
 import com.svprdga.infinitescrollsample.domain.exception.KoException
 import com.svprdga.infinitescrollsample.util.Logger
@@ -24,7 +27,8 @@ class ApiClient(
     log: Logger,
     url: String,
     private val apiKey: String,
-    enableLog: Boolean = false
+    enableLog: Boolean = false,
+    private val schedulerProvider: ISchedulerProvider
 ) {
 
     // ****************************************** VARS ***************************************** //
@@ -74,9 +78,10 @@ class ApiClient(
 
     // ************************************* PUBLIC METHODS ************************************ //
 
-    fun getPopularShows(): Single<PopularShowsResponse> {
-        return api.getPopularShows(apiKey, "en-US", 0)
+    fun getPopularShows(page: Int): Single<PopularShowsResponse> {
+        return api.getPopularShows(apiKey, "en-US", page)
             .doOnError(errorConsumer)
+            .compose(SingleWorkerTransformer<PopularShowsResponse>(schedulerProvider))
     }
 
 }

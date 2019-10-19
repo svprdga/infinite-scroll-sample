@@ -8,13 +8,13 @@ class PopularShowsResponse {
     var totalResults = 0
     @SerializedName("total_pages")
     var totalPages = 0
-    var results = Results()
+    var results: List<ShowEntity> = listOf()
 }
 
-class Results {
+class ShowEntity {
     var id = -1
     var name = ""
     var overview = ""
     @SerializedName("vote_average")
-    var averageRating = 0
+    var averageRating = 0.0f
 }

@@ -1,32 +1,31 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
-import com.svprdga.infinitescrollsample.data.network.client.ApiClient
-import com.svprdga.infinitescrollsample.data.network.entity.PopularShowsResponse
+import com.svprdga.infinitescrollsample.data.repository.ShowRepository
 import com.svprdga.infinitescrollsample.di.annotations.PerUiComponent
+import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.util.Logger
 import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 @PerUiComponent
 class ListPresenter(
     private val log: Logger,
-    private val client: ApiClient
+    private val showRepository: ShowRepository
 ) : IListPresenter {
 
     // ****************************************** VARS ***************************************** //
 
     private var view: IListView? = null
 
-    private val popularShowsObserver = object : SingleObserver<PopularShowsResponse> {
+    private val popularShowsObserver = object : SingleObserver<List<Show>> {
         override fun onSubscribe(d: Disposable) {
             // Nothing.
         }
 
-        override fun onSuccess(content: PopularShowsResponse) {
+        override fun onSuccess(content: List<Show>) {
+
         }
 
         override fun onError(e: Throwable) {
@@ -42,9 +41,7 @@ class ListPresenter(
         this.view = view
 
         // Fetch first items.
-        client.getPopularShows()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        showRepository.findPopularShows(1)
             .subscribe(popularShowsObserver)
     }
 
