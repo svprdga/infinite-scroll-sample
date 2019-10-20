@@ -1,7 +1,9 @@
 package com.svprdga.infinitescrollsample.data.network.entity
 
 import com.google.gson.annotations.SerializedName
+import com.svprdga.infinitescrollsample.domain.Mockable
 
+@Mockable
 class PopularShowsResponse {
     var page = 0
     @SerializedName("total_pages")

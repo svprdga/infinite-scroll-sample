@@ -81,6 +81,9 @@ dependencies {
 
     // Unit test.
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    testImplementation 'de.bechte.junit:junit-hierarchicalcontextrunner:4.12.1'
 
     // Instrumentation tests.
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
