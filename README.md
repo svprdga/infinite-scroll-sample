@@ -19,3 +19,9 @@ have the key, please follow this steps to run this project in your device or emu
 ## Image caching
 
 We are going to load a small thumbnail of each element. Two main libraries were analyzed: [Picasso](https://square.github.io/picasso/) and [Glide](https://github.com/bumptech/glide). We are going to use Glide because it stores the preview pictures with the final image size, hence the loading from cache should be faster.
+
+## Tests
+
+Some sample unit tests will be written for this project, for that purpose we are going to use the following tools:
+- [Mockito](https://github.com/mockito/mockito) as our mock library. 
+- [HierarchicalContextRunner](https://mvnrepository.com/artifact/de.bechte.junit/junit-hierarchicalcontextrunner) which will allow us to write WHEN-GIVEN-SHOULD style tests.
