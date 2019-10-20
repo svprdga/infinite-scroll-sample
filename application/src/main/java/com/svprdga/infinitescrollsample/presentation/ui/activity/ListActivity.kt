@@ -2,7 +2,7 @@ package com.svprdga.infinitescrollsample.presentation.ui.activity
 
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
@@ -13,6 +13,9 @@ import com.svprdga.infinitescrollsample.util.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL
+import com.svprdga.infinitescrollsample.presentation.ui.extra.ItemDecoration
 
 class ListActivity : BaseActivity(), IListView {
 
@@ -40,14 +43,15 @@ class ListActivity : BaseActivity(), IListView {
         setSupportActionBar(toolbar)
 
         // Recylcer view set-up.
-        val linearLayoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = linearLayoutManager
-        scrollListener = object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        val layoutManager = StaggeredGridLayoutManager(2, VERTICAL)
+        recyclerView.layoutManager = layoutManager
+        scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 presenter.loadNextShowSet()
             }
         }
         recyclerView.addOnScrollListener(scrollListener)
+        recyclerView.addItemDecoration(ItemDecoration(this))
 
         presenter.bind(this)
     }

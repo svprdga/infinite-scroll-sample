@@ -1,20 +1,27 @@
 package com.svprdga.infinitescrollsample.presentation.ui.extra
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 
+private const val CARD_CORNER_RADIUS = 20
+
 class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     // ***************************************** VIEWS ***************************************** //
 
+    private val cardView: CardView =
+        view.findViewById(R.id.cardView)
     private val nameTextView: TextView =
         view.findViewById(R.id.name)
     private val overviewTextView: TextView =
@@ -23,13 +30,21 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         view.findViewById(R.id.rating)
     private val imageView: ImageView =
         view.findViewById(R.id.thumbnail)
+    private val ratingBar: RatingBar =
+        view.findViewById(R.id.ratingBar)
 
     // ************************************* PUBLIC METHODS ************************************ //
 
     fun initializeView(show: Show, context: Context) {
+        cardView.radius = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            CARD_CORNER_RADIUS.toFloat(),
+            context.resources.displayMetrics)
+
         nameTextView.text = show.name
         overviewTextView.text = show.overview
-        ratingTextView.text = show.averageRating.toString()
+        ratingTextView.text = " ${show.averageRating}"
+        ratingBar.rating = show.averageRating / 2f
 
         show.imagePath?.let {
             Glide.with(context).load(show.imagePath).into(imageView)
@@ -39,8 +54,8 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 class ShowListAdapter(
     private val context: Context,
-    private val shows: List<Show>)
-    : RecyclerView.Adapter<ShowViewHolder>() {
+    private val shows: List<Show>
+) : RecyclerView.Adapter<ShowViewHolder>() {
 
     // ************************************* PUBLIC METHODS ************************************ //
 

@@ -14,7 +14,7 @@ class Mapper {
             for (entity in it.results) {
 
                 val imagePath = if (entity.imagePath != null) {
-                    "$IMAGE_URL$W92${entity.imagePath!!.substring(1)}"
+                    "$IMAGE_URL$W300${entity.imagePath!!.substring(1)}"
                 } else {
                     null
                 }

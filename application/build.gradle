@@ -75,6 +75,9 @@ dependencies {
     // Other.
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation ("com.github.bumptech.glide:glide:$glideVersion@aar") {
+        transitive = true
+    }
 
     // Unit test.
     testImplementation 'junit:junit:4.12'

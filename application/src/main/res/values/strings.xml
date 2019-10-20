@@ -6,5 +6,6 @@
     <!-- List -->
     <string name="list_errorTitle">Oops...something went wrong</string>
     <string name="list_errorMessage">Please come back after a few minutes!</string>
+    <string name="showEntry_rating">Rating: </string>
 
 </resources>
