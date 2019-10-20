@@ -30,6 +30,7 @@ class ListActivity : BaseActivity(), IListView {
 
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
     private var shows: MutableList<Show> = mutableListOf()
+    private var showListAdapter: ShowListAdapter? = null
 
     // *************************************** LIFECYCLE *************************************** //
 
@@ -64,11 +65,17 @@ class ListActivity : BaseActivity(), IListView {
     // ************************************* PUBLIC METHODS ************************************ //
 
     override fun appendShows(newShows: List<Show>) {
+
         shows.addAll(newShows)
-        val context = this
+
+        if (showListAdapter == null) {
+            showListAdapter = ShowListAdapter(this, shows)
+            recyclerView.adapter = showListAdapter
+        }
+
         recyclerView.apply {
-            adapter = ShowListAdapter(context, shows)
-            adapter?.notifyItemRangeChanged(0, shows.size)
+
+            adapter?.notifyItemRangeChanged(0, shows.size - 1)
         }
     }
 
