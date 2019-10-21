@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00796b</color>
+    <color name="colorPrimaryDark">#004d40</color>
+    <color name="colorAccent">#27AE60</color>
+    <color name="primaryTextLight">#DE000000</color>
+    <color name="secondaryTextLight">#8A000000</color>
+    <color name="hintDisabledTextLight">#61000000</color>
+    <color name="dividerLight">#1F000000</color> <!-- 12% -->
+    <color name="activityBackgroundLight">#EDEDED</color>
+    <color name="primaryTextDark">#FFFFFF</color>
+    <color name="secondaryTextDark">#B3FFFFFF</color> <!-- 70% -->
+    <color name="hintDisabledTextDark">#4DFFFFFF</color> <!-- 30% -->
+    <color name="dividerDark">#1FFFFFFF</color> <!-- 12% -->
+    <color name="actionBarPressedBackground">#298DBE</color>
+    <color name="activityBackground0">#EDEDED</color>
+    <color name="settingsEntryHoverColor">#CCCCCC</color>
+    <color name="settingsDisableOption">#8F8F8F</color>
+    <color name="dialog_lightTextColor">#737373</color>
+</resources>
