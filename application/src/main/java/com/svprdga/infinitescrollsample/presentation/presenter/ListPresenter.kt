@@ -8,7 +8,6 @@ import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.util.Logger
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
-import java.lang.UnsupportedOperationException
 
 @PerUiComponent
 class ListPresenter(

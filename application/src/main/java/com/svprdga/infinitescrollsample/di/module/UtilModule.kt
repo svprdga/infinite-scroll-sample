@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-private const val LOG_TAG = "application"
+private const val LOG_TAG = "iss_application"
 
 @Module
 class UtilModule {
@@ -13,7 +13,7 @@ class UtilModule {
     @Provides
     @Singleton
     fun provideLogger(): Logger {
-        return Logger(LOG_TAG);
+        return Logger(LOG_TAG)
     }
 
 }
