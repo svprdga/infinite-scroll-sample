@@ -16,6 +16,18 @@ import com.svprdga.infinitescrollsample.domain.Show
 
 private const val CARD_CORNER_RADIUS = 20
 
+interface ShowListener{
+    /**
+     * The user selected the given [show] as favorite.
+     */
+    fun onMakeFavorite(show: Show)
+
+    /**
+     * The user choosed to undo the favorite category for the given [show].
+     */
+    fun onUndoFavorite(show: Show, position: Int)
+}
+
 class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     // ***************************************** VIEWS ***************************************** //
@@ -35,7 +47,7 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     // ************************************* PUBLIC METHODS ************************************ //
 
-    fun initializeView(show: Show, context: Context) {
+    fun initializeView(show: Show, context: Context, showListener: ShowListener) {
         cardView.radius = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             CARD_CORNER_RADIUS.toFloat(),
@@ -54,7 +66,8 @@ class ShowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
 class ShowListAdapter(
     private val context: Context,
-    private val shows: List<Show>
+    private val shows: List<Show>,
+    private val showListener: ShowListener
 ) : RecyclerView.Adapter<ShowViewHolder>() {
 
     // ************************************* PUBLIC METHODS ************************************ //
@@ -72,6 +85,6 @@ class ShowListAdapter(
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
         val show = shows[position]
-        holder.initializeView(show, context)
+        holder.initializeView(show, context, showListener)
     }
 }

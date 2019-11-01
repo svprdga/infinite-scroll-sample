@@ -1,24 +1,24 @@
-package com.svprdga.infinitescrollsample.presentation.ui.activity
+package com.svprdga.infinitescrollsample.presentation.ui.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.recyclerview.widget.GridLayoutManager
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.presentation.ui.extra.EndlessRecyclerViewScrollListener
-import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
-import com.svprdga.infinitescrollsample.util.Logger
-import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager.VERTICAL
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ItemDecoration
+import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
+import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
+import com.svprdga.infinitescrollsample.util.Logger
+import kotlinx.android.synthetic.main.fragment_list.*
+import javax.inject.Inject
 
-class ListActivity : BaseActivity(), IListView {
-
+class ListFragment : BaseFragment(), IListView {
     // ************************************* INJECTED VARS ************************************* //
 
     @Inject
@@ -32,19 +32,33 @@ class ListActivity : BaseActivity(), IListView {
     private var shows: MutableList<Show> = mutableListOf()
     private var showListAdapter: ShowListAdapter? = null
 
+    private var showListener = object : ShowListener {
+        override fun onUndoFavorite(show: Show, position: Int) {
+//            viewPosition = position
+//            presenter.makeShowNotFavorite(show)
+        }
+
+        override fun onMakeFavorite(show: Show) {
+            // Cannot happen on this context.
+        }
+    }
+
     // *************************************** LIFECYCLE *************************************** //
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme_NoActionBar)
-        super.onCreate(savedInstanceState)
-        uiComponent?.inject(this)
-        setContentView(R.layout.activity_main)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_list, container, false)
+    }
 
-        // Toolbar.
-        setSupportActionBar(toolbar)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        uiComponent?.inject(this)
 
         // Recylcer view set-up.
-        val layoutManager = StaggeredGridLayoutManager(2, VERTICAL)
+        val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.layoutManager = layoutManager
         scrollListener = object : EndlessRecyclerViewScrollListener(layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
@@ -52,7 +66,7 @@ class ListActivity : BaseActivity(), IListView {
             }
         }
         recyclerView.addOnScrollListener(scrollListener)
-        recyclerView.addItemDecoration(ItemDecoration(this))
+        recyclerView.addItemDecoration(ItemDecoration(baseActivity))
 
         presenter.bind(this)
     }
@@ -64,12 +78,20 @@ class ListActivity : BaseActivity(), IListView {
 
     // ************************************* PUBLIC METHODS ************************************ //
 
+    override fun hideAll() {
+        mainContainer.visibility = View.INVISIBLE
+    }
+
+    override fun showAll() {
+        mainContainer.visibility = View.VISIBLE
+    }
+
     override fun appendShows(newShows: List<Show>) {
 
         shows.addAll(newShows)
 
         if (showListAdapter == null) {
-            showListAdapter = ShowListAdapter(this, shows)
+            showListAdapter = ShowListAdapter(baseActivity, shows, showListener)
             recyclerView.adapter = showListAdapter
         }
 

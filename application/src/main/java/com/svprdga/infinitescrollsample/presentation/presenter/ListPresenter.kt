@@ -1,18 +1,22 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
-import com.svprdga.infinitescrollsample.data.repository.ShowRepository
 import com.svprdga.infinitescrollsample.di.annotations.PerUiComponent
 import com.svprdga.infinitescrollsample.domain.ShowData
+import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
+import com.svprdga.infinitescrollsample.presentation.eventbus.AppFragment
+import com.svprdga.infinitescrollsample.presentation.eventbus.FragmentNavBus
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.util.Logger
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
+import io.reactivex.observers.DisposableObserver
 
 @PerUiComponent
 class ListPresenter(
     private val log: Logger,
-    private val showRepository: ShowRepository
+    private val showRepository: IShowRepository,
+    private val navBus: FragmentNavBus
 ) : IListPresenter {
 
     // ****************************************** VARS ***************************************** //
@@ -38,10 +42,29 @@ class ListPresenter(
         }
     }
 
+    private val navDisposable = object : DisposableObserver<AppFragment>() {
+        override fun onNext(fragment: AppFragment) {
+            if (fragment == AppFragment.LIST){
+                view?.showAll()
+            } else {
+                view?.hideAll()
+            }
+        }
+
+        override fun onError(e: Throwable) {
+            // Do nothing.
+        }
+
+        override fun onComplete() {
+            // Do nothing.
+        }
+    }
+
     // ************************************* PUBLIC METHODS ************************************ //
 
     override fun bind(view: IListView) {
         this.view = view
+        navBus.getNewSearch().subscribe(navDisposable)
 
         // Fetch first items.
         showRepository.findPopularShows(currentPage)
@@ -50,6 +73,7 @@ class ListPresenter(
 
     override fun unBind() {
         this.view = null
+        navDisposable.dispose()
     }
 
     override fun loadNextShowSet() {

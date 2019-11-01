@@ -30,12 +30,6 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideSchedulerProvider(): ISchedulerProvider {
-        return SchedulerProvider()
-    }
-
-    @Provides
-    @Singleton
     fun provideApiClient(
         log: Logger, retrofit: Retrofit,
         api: IApi, schedulerProvider: ISchedulerProvider

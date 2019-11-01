@@ -1,7 +1,7 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.*
-import com.svprdga.infinitescrollsample.data.repository.ShowRepository
+import com.svprdga.infinitescrollsample.data.repository.IShowRepository
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.domain.ShowData
 import com.svprdga.infinitescrollsample.domain.exception.KoException
@@ -24,7 +24,7 @@ class ListPresenterTest {
     @Mock
     lateinit var log: Logger
     @Mock
-    lateinit var showRepository: ShowRepository
+    lateinit var showRepository: IShowRepository
     @Mock
     lateinit var view: IListView
     @Mock

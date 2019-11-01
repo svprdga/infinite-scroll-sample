@@ -1,6 +1,7 @@
 package com.svprdga.infinitescrollsample.data.network.entity.mapper
 
 import com.svprdga.infinitescrollsample.data.network.entity.PopularShowsResponse
+import com.svprdga.infinitescrollsample.data.persistence.entity.ShowDbEntity
 import com.svprdga.infinitescrollsample.domain.*
 import io.reactivex.functions.Function
 
@@ -31,6 +32,37 @@ class Mapper {
             }
 
             ShowData(it.page, it.page >= it.totalPages, list)
+        }
+    }
+
+    /**
+     * Map a [Show] to [ShowDbEntity].
+     */
+    fun showToShowDbEntity(show: Show): ShowDbEntity {
+        return ShowDbEntity(
+            show.id,
+            show.name,
+            show.overview,
+            show.averageRating,
+            show.imagePath
+        )
+    }
+
+    /**
+     * Map an [Array] of [ShowDbEntity] to a [List] of [Show].
+     */
+    fun showDbEntitiesToShows(): Function<Array<ShowDbEntity>, List<Show>> {
+        return Function {
+            val list = arrayListOf<Show>()
+
+            it.forEach { entity ->
+                val show = Show(
+                    entity.id, entity.name, entity.overview, entity.averageRating, entity.imagePath
+                )
+                list.add(show)
+            }
+
+            list
         }
     }
 
