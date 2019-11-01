@@ -3,9 +3,7 @@ package com.svprdga.infinitescrollsample.util
 import android.content.Context
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Mockable
-import javax.inject.Singleton
 
-@Singleton
 @Mockable
 class TextProvider(private val context: Context) {
 

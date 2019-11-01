@@ -1,6 +1,5 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
-import com.svprdga.infinitescrollsample.di.annotations.PerUiComponent
 import com.svprdga.infinitescrollsample.domain.ShowData
 import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
 import com.svprdga.infinitescrollsample.presentation.eventbus.AppFragment
@@ -12,7 +11,6 @@ import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
 
-@PerUiComponent
 class ListPresenter(
     private val log: Logger,
     private val showRepository: IShowRepository,

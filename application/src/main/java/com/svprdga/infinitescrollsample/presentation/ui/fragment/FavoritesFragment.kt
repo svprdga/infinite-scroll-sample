@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
@@ -14,14 +15,13 @@ import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import kotlinx.android.synthetic.main.fragment_list.recyclerView
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class FavoritesFragment : BaseFragment(), IFavoritesView {
+class FavoritesFragment : Fragment(), IFavoritesView {
 
     // ************************************* INJECTED VARS ************************************* //
 
-    @Inject
-    lateinit var presenter: IFavoritesPresenter
+    val presenter: IFavoritesPresenter by inject()
 
     // ****************************************** VARS ***************************************** //
 
@@ -51,7 +51,6 @@ class FavoritesFragment : BaseFragment(), IFavoritesView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        uiComponent?.inject(this)
 
         // Recycler view set-up.
         val layoutManager = LinearLayoutManager(activity)
@@ -66,7 +65,7 @@ class FavoritesFragment : BaseFragment(), IFavoritesView {
     }
 
     override fun showSmallPopup(message: String) {
-        Toast.makeText(baseActivity, message, Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
     }
 
     // ************************************* PUBLIC METHODS ************************************ //
@@ -83,7 +82,7 @@ class FavoritesFragment : BaseFragment(), IFavoritesView {
         this.shows = shows.toMutableList()
 
         adapter =
-            ShowListAdapter(baseActivity, this.shows, showListener)
+            ShowListAdapter(activity!!, this.shows, showListener)
         recyclerView.adapter = adapter
     }
 

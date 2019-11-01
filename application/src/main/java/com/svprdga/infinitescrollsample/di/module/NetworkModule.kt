@@ -4,55 +4,38 @@ import com.svprdga.infinitescrollsample.BuildConfig
 import com.svprdga.infinitescrollsample.data.network.client.ApiClient
 import com.svprdga.infinitescrollsample.data.network.client.IApi
 import com.svprdga.infinitescrollsample.data.network.entity.mapper.Mapper
-import com.svprdga.infinitescrollsample.data.network.rx.scheduler.ISchedulerProvider
-import com.svprdga.infinitescrollsample.data.network.rx.scheduler.SchedulerProvider
 import com.svprdga.infinitescrollsample.domain.API_URL
 import com.svprdga.infinitescrollsample.util.Logger
-import dagger.Module
-import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 private const val CONNECTION_TIMEOUT = 10000L
 private const val READ_TIMEOUT = 5000L
 private const val WRITE_TIMEOUT = 5000L
 private const val RETRIES = 3
 
-@Module
-class NetworkModule {
+val networkModule = module {
 
-    @Provides
-    @Singleton
-    fun provideApiClient(
-        log: Logger, retrofit: Retrofit,
-        api: IApi, schedulerProvider: ISchedulerProvider
-    ): ApiClient {
-        return ApiClient(
-            log,
-            retrofit,
-            api,
-            BuildConfig.IMDB_API_KEY,
-            schedulerProvider
-        )
+    single<ApiClient> {
+        ApiClient(get(), get(), get(), BuildConfig.IMDB_API_KEY, get())
     }
 
-    @Provides
-    @Singleton
-    fun provideMapper(): Mapper {
-        return Mapper()
+    single {
+        Mapper()
     }
 
-    @Provides
-    @Singleton
-    fun provideHttpInterceptor(log: Logger): Interceptor {
-        return object : Interceptor {
+    single<Interceptor> {
+
+        val log: Logger = get()
+
+        object : Interceptor {
             override fun intercept(chain: Interceptor.Chain): Response {
                 val request = chain.request()
 
@@ -78,14 +61,13 @@ class NetworkModule {
         }
     }
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(interceptor: Interceptor): Retrofit {
+    single {
         val httpClientBuilder = OkHttpClient.Builder()
         httpClientBuilder.connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
         httpClientBuilder.readTimeout(READ_TIMEOUT, TimeUnit.MILLISECONDS)
         httpClientBuilder.writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
 
+        val interceptor: Interceptor = get()
         httpClientBuilder.addInterceptor(interceptor)
 
         if (BuildConfig.DEBUG) {
@@ -98,13 +80,12 @@ class NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
         builder.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 
-        return builder.client(httpClientBuilder.build()).build()
+        builder.client(httpClientBuilder.build()).build()
     }
 
-    @Provides
-    @Singleton
-    fun provideApi(retrofit: Retrofit): IApi {
-        return retrofit.create(IApi::class.java)
+    single {
+        val retrofit: Retrofit = get()
+        retrofit.create(IApi::class.java)
     }
 
 }

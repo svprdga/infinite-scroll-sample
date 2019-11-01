@@ -13,4 +13,5 @@ open class ShowDbEntity(
     open var averageRating: Float = 0.0F,
     @RealmField("image_path")
     open var imagePath: String? = null
-) : RealmObject()
+) :
+    RealmObject()

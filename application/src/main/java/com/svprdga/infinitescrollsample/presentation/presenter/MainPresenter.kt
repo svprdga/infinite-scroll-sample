@@ -1,12 +1,10 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
-import com.svprdga.infinitescrollsample.di.annotations.PerUiComponent
 import com.svprdga.infinitescrollsample.presentation.eventbus.AppFragment
 import com.svprdga.infinitescrollsample.presentation.eventbus.FragmentNavBus
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IMainPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IMainView
 
-@PerUiComponent
 class MainPresenter(
     private val fragmentNavBus: FragmentNavBus
 ) : IMainPresenter {
