@@ -6,9 +6,11 @@ import com.svprdga.infinitescrollsample.presentation.eventbus.FragmentNavBus
 import com.svprdga.infinitescrollsample.presentation.presenter.FavoritesPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.ListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.MainPresenter
+import com.svprdga.infinitescrollsample.presentation.presenter.ShowPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IFavoritesPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IMainPresenter
+import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IShowPresenter
 import com.svprdga.infinitescrollsample.util.Logger
 import com.svprdga.infinitescrollsample.util.TextProvider
 import dagger.Module
@@ -25,8 +27,10 @@ class PresenterModule {
 
     @Provides
     @PerUiComponent
-    fun provideListPresenter(log: Logger, showRepository: IShowRepository,
-                             navBus: FragmentNavBus): IListPresenter {
+    fun provideListPresenter(
+        log: Logger, showRepository: IShowRepository,
+        navBus: FragmentNavBus
+    ): IListPresenter {
         return ListPresenter(log, showRepository, navBus)
     }
 
@@ -37,6 +41,14 @@ class PresenterModule {
         textProvider: TextProvider, navBus: FragmentNavBus
     ): IFavoritesPresenter {
         return FavoritesPresenter(log, showRepository, textProvider, navBus)
+    }
+
+    @Provides
+    @PerUiComponent
+    fun provideShowPresenter(
+        showRepository: IShowRepository
+    ): IShowPresenter {
+        return ShowPresenter(showRepository)
     }
 
 }

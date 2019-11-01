@@ -26,7 +26,8 @@ class Mapper {
                         entity.name,
                         entity.overview,
                         entity.averageRating,
-                        imagePath
+                        imagePath,
+                        false
                     )
                 )
             }
@@ -57,7 +58,8 @@ class Mapper {
 
             it.forEach { entity ->
                 val show = Show(
-                    entity.id, entity.name, entity.overview, entity.averageRating, entity.imagePath
+                    entity.id, entity.name, entity.overview, entity.averageRating, entity.imagePath,
+                    true
                 )
                 list.add(show)
             }
