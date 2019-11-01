@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.svprdga.infinitescrollsample.R
@@ -14,19 +15,13 @@ import com.svprdga.infinitescrollsample.presentation.ui.extra.EndlessRecyclerVie
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ItemDecoration
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
-import com.svprdga.infinitescrollsample.util.Logger
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.koin.android.ext.android.inject
 
-//import javax.inject.Inject
+class ListFragment : Fragment(), IListView {
 
-class ListFragment : BaseFragment(), IListView {
     // ************************************* INJECTED VARS ************************************* //
 
-//    @Inject
-//    lateinit var log: Logger
-//    @Inject
-//    lateinit var presenter: IListPresenter
     val presenter: IListPresenter by inject()
 
     // ****************************************** VARS ***************************************** //
@@ -69,7 +64,7 @@ class ListFragment : BaseFragment(), IListView {
             }
         }
         recyclerView.addOnScrollListener(scrollListener)
-        recyclerView.addItemDecoration(ItemDecoration(baseActivity))
+        recyclerView.addItemDecoration(ItemDecoration(context!!))
 
         presenter.bind(this)
     }
@@ -94,7 +89,7 @@ class ListFragment : BaseFragment(), IListView {
         shows.addAll(newShows)
 
         if (showListAdapter == null) {
-            showListAdapter = ShowListAdapter(baseActivity, shows, showListener)
+            showListAdapter = ShowListAdapter(activity!!, shows, showListener)
             recyclerView.adapter = showListAdapter
         }
 

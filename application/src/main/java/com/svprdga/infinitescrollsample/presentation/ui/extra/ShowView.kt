@@ -11,13 +11,11 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.svprdga.infinitescrollsample.R
-//import com.svprdga.infinitescrollsample.di.component.AppComponent
-//import com.svprdga.infinitescrollsample.di.component.UiComponent
-//import com.svprdga.infinitescrollsample.di.module.PresenterModule
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IShowPresenter
-import com.svprdga.infinitescrollsample.presentation.presenter.view.IShowView
-import com.svprdga.infinitescrollsample.presentation.ui.application.CoreApp
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+
 //import javax.inject.Inject
 
 private const val CARD_CORNER_RADIUS = 20
@@ -34,7 +32,11 @@ interface ShowListener{
     fun onUndoFavorite(show: Show, position: Int)
 }
 
-class ShowView(view: View) : RecyclerView.ViewHolder(view) {
+class ShowView(view: View) : RecyclerView.ViewHolder(view), KoinComponent {
+
+    // ************************************* INJECTED VARS ************************************* //
+
+    val presenter: IShowPresenter by inject()
 
     // ***************************************** VIEWS ***************************************** //
 

@@ -2,6 +2,7 @@ package com.svprdga.infinitescrollsample.presentation.ui.activity
 
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.presentation.eventbus.AppFragment
@@ -11,19 +12,15 @@ import com.svprdga.infinitescrollsample.presentation.ui.fragment.FavoritesFragme
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 
-//import javax.inject.Inject
-
 enum class Tab {
     LIST,
     FAVORITES
 }
 
-class MainActivity : BaseActivity(), IMainView {
+class MainActivity : AppCompatActivity(), IMainView {
 
     // ************************************* INJECTED VARS ************************************* //
 
-//    @Inject
-//    lateinit var presenter: IMainPresenter
     val presenter: IMainPresenter by inject()
 
     // ****************************************** VARS ***************************************** //
@@ -59,7 +56,6 @@ class MainActivity : BaseActivity(), IMainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        uiComponent?.inject(this)
 
         // Toolbar.
         setSupportActionBar(toolbar)
