@@ -9,7 +9,9 @@ import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IMain
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IMainView
 import com.svprdga.infinitescrollsample.presentation.ui.fragment.FavoritesFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+
+//import javax.inject.Inject
 
 enum class Tab {
     LIST,
@@ -20,8 +22,9 @@ class MainActivity : BaseActivity(), IMainView {
 
     // ************************************* INJECTED VARS ************************************* //
 
-    @Inject
-    lateinit var presenter: IMainPresenter
+//    @Inject
+//    lateinit var presenter: IMainPresenter
+    val presenter: IMainPresenter by inject()
 
     // ****************************************** VARS ***************************************** //
 
@@ -56,7 +59,7 @@ class MainActivity : BaseActivity(), IMainView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        uiComponent?.inject(this)
+//        uiComponent?.inject(this)
 
         // Toolbar.
         setSupportActionBar(toolbar)

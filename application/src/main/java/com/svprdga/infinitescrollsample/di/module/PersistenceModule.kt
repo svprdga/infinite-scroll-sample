@@ -2,25 +2,39 @@ package com.svprdga.infinitescrollsample.di.module
 
 import android.content.Context
 import com.svprdga.infinitescrollsample.data.persistence.dao.ShowDao
-import dagger.Module
-import dagger.Provides
+//import dagger.Module
+//import dagger.Provides
 import io.realm.Realm
-import javax.inject.Singleton
+import org.koin.dsl.module
+//import javax.inject.Singleton
 
-@Module
-class PersistenceModule {
+//@Module
+//class PersistenceModule {
+//
+//    @Provides
+//    @Singleton
+//    fun providesRealm(context: Context): Realm {
+//        Realm.init(context)
+//
+//        return Realm.getDefaultInstance()
+//    }
+//
+//    @Provides
+//    @Singleton
+//    fun providesShowDao(realm: Realm): ShowDao {
+//        return ShowDao(realm)
+//    }
+//}
 
-    @Provides
-    @Singleton
-    fun providesRealm(context: Context): Realm {
-        Realm.init(context)
+val persistenceModule = module {
 
-        return Realm.getDefaultInstance()
+    single {
+        Realm.init(get())
+
+        Realm.getDefaultInstance()
     }
 
-    @Provides
-    @Singleton
-    fun providesShowDao(realm: Realm): ShowDao {
-        return ShowDao(realm)
+    single {
+        ShowDao(get())
     }
 }

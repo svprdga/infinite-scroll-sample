@@ -11,14 +11,14 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.svprdga.infinitescrollsample.R
-import com.svprdga.infinitescrollsample.di.component.AppComponent
-import com.svprdga.infinitescrollsample.di.component.UiComponent
-import com.svprdga.infinitescrollsample.di.module.PresenterModule
+//import com.svprdga.infinitescrollsample.di.component.AppComponent
+//import com.svprdga.infinitescrollsample.di.component.UiComponent
+//import com.svprdga.infinitescrollsample.di.module.PresenterModule
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IShowPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IShowView
 import com.svprdga.infinitescrollsample.presentation.ui.application.CoreApp
-import javax.inject.Inject
+//import javax.inject.Inject
 
 private const val CARD_CORNER_RADIUS = 20
 

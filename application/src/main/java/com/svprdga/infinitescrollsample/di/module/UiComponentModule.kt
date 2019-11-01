@@ -1,8 +1,8 @@
 package com.svprdga.infinitescrollsample.di.module
-
-import dagger.Module
-
-@Module
-class UiComponentModule {
-
-}
+//
+//import dagger.Module
+//
+//@Module
+//class UiComponentModule {
+//
+//}

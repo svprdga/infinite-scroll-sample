@@ -14,14 +14,17 @@ import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import kotlinx.android.synthetic.main.fragment_list.recyclerView
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+
+//import javax.inject.Inject
 
 class FavoritesFragment : BaseFragment(), IFavoritesView {
 
     // ************************************* INJECTED VARS ************************************* //
 
-    @Inject
-    lateinit var presenter: IFavoritesPresenter
+//    @Inject
+//    lateinit var presenter: IFavoritesPresenter
+    val presenter: IFavoritesPresenter by inject()
 
     // ****************************************** VARS ***************************************** //
 
@@ -51,7 +54,7 @@ class FavoritesFragment : BaseFragment(), IFavoritesView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        uiComponent?.inject(this)
+//        uiComponent?.inject(this)
 
         // Recycler view set-up.
         val layoutManager = LinearLayoutManager(activity)

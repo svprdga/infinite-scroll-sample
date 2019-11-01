@@ -3,23 +3,35 @@ package com.svprdga.infinitescrollsample.di.module
 import com.svprdga.infinitescrollsample.data.network.rx.scheduler.ISchedulerProvider
 import com.svprdga.infinitescrollsample.data.network.rx.scheduler.SchedulerProvider
 import com.svprdga.infinitescrollsample.presentation.eventbus.FragmentNavBus
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+//import dagger.Module
+//import dagger.Provides
+import org.koin.dsl.module
+//import javax.inject.Singleton
 
-@Module
-class RxModule {
+//@Module
+//class RxModule {
+//
+//    @Provides
+//    @Singleton
+//    fun provideSchedulerProvider(): ISchedulerProvider {
+//        return SchedulerProvider()
+//    }
+//
+//    @Provides
+//    @Singleton
+//    fun provideAppFragmentBus(): FragmentNavBus {
+//        return FragmentNavBus()
+//    }
+//
+//}
 
-    @Provides
-    @Singleton
-    fun provideSchedulerProvider(): ISchedulerProvider {
-        return SchedulerProvider()
+val rxModule = module {
+
+    single<ISchedulerProvider> {
+        SchedulerProvider()
     }
 
-    @Provides
-    @Singleton
-    fun provideAppFragmentBus(): FragmentNavBus {
-        return FragmentNavBus()
+    single {
+        FragmentNavBus()
     }
-
 }

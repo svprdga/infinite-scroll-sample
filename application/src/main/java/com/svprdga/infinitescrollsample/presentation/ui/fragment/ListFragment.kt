@@ -16,15 +16,18 @@ import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import com.svprdga.infinitescrollsample.util.Logger
 import kotlinx.android.synthetic.main.fragment_list.*
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+
+//import javax.inject.Inject
 
 class ListFragment : BaseFragment(), IListView {
     // ************************************* INJECTED VARS ************************************* //
 
-    @Inject
-    lateinit var log: Logger
-    @Inject
-    lateinit var presenter: IListPresenter
+//    @Inject
+//    lateinit var log: Logger
+//    @Inject
+//    lateinit var presenter: IListPresenter
+    val presenter: IListPresenter by inject()
 
     // ****************************************** VARS ***************************************** //
 
@@ -55,7 +58,7 @@ class ListFragment : BaseFragment(), IListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        uiComponent?.inject(this)
+//        uiComponent?.inject(this)
 
         // Recylcer view set-up.
         val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
