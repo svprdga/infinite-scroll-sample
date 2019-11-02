@@ -1,5 +1,6 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
+import android.os.Handler
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
 import com.svprdga.infinitescrollsample.domain.usecase.ShowsUseCase
@@ -16,13 +17,15 @@ class ShowPresenter(
     private val log: Logger,
     private val showsUseCase: ShowsUseCase,
     private val textProvider: TextProvider,
-    private val favoritesBus: FavoritesBus
+    private val favoritesBus: FavoritesBus,
+    private val handler: Handler
 ) : IShowPresenter {
-
-    override var show: Show? = null
 
     // ****************************************** VARS ***************************************** //
 
+    override var show: Show? = null
+
+    private var position: Int = -1
     private var view: IShowView? = null
 
     private val removeFavoriteListener = object : CompletableObserver {
@@ -33,8 +36,10 @@ class ShowPresenter(
         override fun onComplete() {
             view?.showSmallPopup(textProvider.showRemovedFavorites)
             show?.isFavorite = false
-            favoritesBus.setFavoriteEvent(FavoriteEvent(show!!))
             view?.setUncheckedFavoriteIcon()
+            handler.post {
+                favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
+            }
         }
 
         override fun onError(e: Throwable) {
@@ -51,7 +56,7 @@ class ShowPresenter(
         override fun onComplete() {
             view?.showSmallPopup(textProvider.showAddedFavorites)
             show?.isFavorite = true
-            favoritesBus.setFavoriteEvent(FavoriteEvent(show!!))
+            favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
             view?.setFavoriteIcon()
         }
 
@@ -71,7 +76,8 @@ class ShowPresenter(
         this.view = null
     }
 
-    override fun favoriteButtonClick() {
+    override fun favoriteButtonClick(itemPosition: Int) {
+        position = itemPosition
         show?.let {
             if (it.isFavorite) {
                 showsUseCase.removeFavorite(it)

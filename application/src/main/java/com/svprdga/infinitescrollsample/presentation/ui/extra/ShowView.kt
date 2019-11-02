@@ -68,7 +68,7 @@ class ShowView(private val context: Context, view: View) : IShowView, RecyclerVi
         }
 
         favoriteButton.setOnClickListener {
-            presenter.favoriteButtonClick()
+            presenter.favoriteButtonClick(layoutPosition)
         }
     }
 

@@ -1,15 +1,12 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.svprdga.infinitescrollsample.domain.Show
-import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
 import com.svprdga.infinitescrollsample.domain.usecase.ShowsUseCase
-import com.svprdga.infinitescrollsample.presentation.eventbus.AppFragment
-import com.svprdga.infinitescrollsample.presentation.eventbus.FragmentNavBus
+import com.svprdga.infinitescrollsample.presentation.eventbus.FavoriteEvent
+import com.svprdga.infinitescrollsample.presentation.eventbus.FavoritesBus
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IFavoritesPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IFavoritesView
 import com.svprdga.infinitescrollsample.util.Logger
-import com.svprdga.infinitescrollsample.util.TextProvider
-import io.reactivex.CompletableObserver
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import io.reactivex.observers.DisposableObserver
@@ -17,27 +14,29 @@ import io.reactivex.observers.DisposableObserver
 class FavoritesPresenter(
     private val log: Logger,
     private val showsUseCase: ShowsUseCase,
-    private val textProvider: TextProvider,
-    private val navBus: FragmentNavBus
+    private val favoritesBus: FavoritesBus
 ) : IFavoritesPresenter {
 
     // ****************************************** VARS ***************************************** //
 
     private var view: IFavoritesView? = null
     private var showsNumber = 0
+    private var shows: List<Show>? = null
 
     private val observer = object : SingleObserver<List<Show>> {
         override fun onSubscribe(d: Disposable) {
             // Not needed
         }
 
-        override fun onSuccess(shows: List<Show>) {
-            if (shows.isEmpty()) {
+        override fun onSuccess(fetchedShows: List<Show>) {
+            shows = fetchedShows
+
+            if (fetchedShows.isEmpty()) {
                 view?.showEmptyFavoritesLayout()
             } else {
-                showsNumber = shows.size
+                showsNumber = fetchedShows.size
                 view?.hideEmptyFavoritesLayout()
-                view?.setFavorites(shows)
+                view?.setFavorites(fetchedShows)
             }
         }
 
@@ -46,19 +45,20 @@ class FavoritesPresenter(
         }
     }
 
-    private val navDisposable = object : DisposableObserver<AppFragment>() {
-        override fun onNext(fragment: AppFragment) {
-            if (fragment == AppFragment.LIST){
-                view?.hideAll()
-            } else {
-                view?.showAll()
-                showsUseCase.findAllFavoritesAsync()
-                    .subscribe(observer)
+    private val favoriteDisposable = object : DisposableObserver<FavoriteEvent>() {
+        override fun onNext(event: FavoriteEvent) {
+            if (!event.show.isFavorite) {
+                view?.removeShowFromList(event.layoutPosition)
+                showsNumber--
+
+                if (showsNumber < 1) {
+                    view?.showEmptyFavoritesLayout()
+                }
             }
         }
 
         override fun onError(e: Throwable) {
-            // Do nothing.
+            e.message?.let { log.error(it) }
         }
 
         override fun onComplete() {
@@ -70,7 +70,7 @@ class FavoritesPresenter(
 
     override fun bind(view: IFavoritesView) {
         this.view = view
-        navBus.getNewSearch().subscribe(navDisposable)
+        favoritesBus.getFavoriteEvent().subscribe(favoriteDisposable)
 
         // Load the favorites list.
         showsUseCase.findAllFavoritesAsync()
@@ -79,32 +79,7 @@ class FavoritesPresenter(
 
     override fun unBind() {
         this.view = null
-        navDisposable.dispose()
+        favoriteDisposable.dispose()
     }
-
-    override fun makeShowNotFavorite(show: Show) {
-        showsUseCase.removeFavorite(show)
-            .subscribe(object : CompletableObserver {
-                override fun onSubscribe(d: Disposable) {
-                    // Not needed
-                }
-
-                override fun onComplete() {
-                    log.debug("Show ${show.name} is not longer a favorite.")
-                    view?.showSmallPopup(textProvider.showRemovedFromFavorites)
-                    view?.removeShowFromList()
-                    showsNumber--
-
-                    if (showsNumber < 1) {
-                        view?.showEmptyFavoritesLayout()
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    e.message?.let { log.error(it) }
-                }
-            })
-    }
-
 
 }

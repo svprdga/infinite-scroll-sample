@@ -8,8 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.fragment.FavoritesFragment"
     android:paddingTop="?attr/actionBarSize"
-    android:paddingBottom="54dp"
-    android:visibility="invisible">
+    android:paddingBottom="54dp">
 
     <!-- ITEM LIST -->
 

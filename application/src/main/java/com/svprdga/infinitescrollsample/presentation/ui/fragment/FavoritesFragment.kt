@@ -24,7 +24,6 @@ class FavoritesFragment : Fragment(), IFavoritesView {
 
     // ****************************************** VARS ***************************************** //
 
-    private var viewPosition: Int? = null
     private var shows: MutableList<Show> = mutableListOf()
     private var adapter: ShowListAdapter? = null
 
@@ -58,14 +57,6 @@ class FavoritesFragment : Fragment(), IFavoritesView {
 
     // ************************************* PUBLIC METHODS ************************************ //
 
-    override fun hideAll() {
-        mainContainer.visibility = View.INVISIBLE
-    }
-
-    override fun showAll() {
-        mainContainer.visibility = View.VISIBLE
-    }
-
     override fun setFavorites(shows: List<Show>) {
         this.shows = shows.toMutableList()
 
@@ -86,10 +77,8 @@ class FavoritesFragment : Fragment(), IFavoritesView {
         noFavoritesLayout.visibility = View.GONE
     }
 
-    override fun removeShowFromList() {
-        viewPosition?.let {
-            shows.removeAt(it)
-            adapter?.notifyItemRemoved(it)
-        }
+    override fun removeShowFromList(position: Int) {
+        shows.removeAt(position)
+        adapter?.notifyItemRemoved(position)
     }
 }

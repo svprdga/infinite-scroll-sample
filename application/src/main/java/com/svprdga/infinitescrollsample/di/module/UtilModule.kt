@@ -1,5 +1,6 @@
 package com.svprdga.infinitescrollsample.di.module
 
+import android.os.Handler
 import com.svprdga.infinitescrollsample.util.Logger
 import com.svprdga.infinitescrollsample.util.TextProvider
 import org.koin.dsl.module
@@ -14,5 +15,9 @@ val utilModule = module {
 
     single {
         TextProvider(get())
+    }
+
+    factory {
+        Handler()
     }
 }

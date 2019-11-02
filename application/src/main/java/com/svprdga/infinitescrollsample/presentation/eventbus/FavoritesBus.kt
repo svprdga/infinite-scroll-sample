@@ -5,7 +5,7 @@ import com.svprdga.infinitescrollsample.domain.Show
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-data class FavoriteEvent(val show: Show)
+data class FavoriteEvent(val show: Show, val layoutPosition: Int)
 
 @Mockable
 class FavoritesBus {

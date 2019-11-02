@@ -41,8 +41,6 @@ class ListFragment : Fragment(), IListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        uiComponent?.inject(this)
-
         // Recylcer view set-up.
         val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         recyclerView.layoutManager = layoutManager
@@ -63,14 +61,6 @@ class ListFragment : Fragment(), IListView {
     }
 
     // ************************************* PUBLIC METHODS ************************************ //
-
-    override fun hideAll() {
-        mainContainer.visibility = View.INVISIBLE
-    }
-
-    override fun showAll() {
-        mainContainer.visibility = View.VISIBLE
-    }
 
     override fun appendShows(newShows: List<Show>) {
 

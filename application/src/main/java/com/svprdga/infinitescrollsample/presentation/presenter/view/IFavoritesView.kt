@@ -5,16 +5,6 @@ import com.svprdga.infinitescrollsample.domain.Show
 interface IFavoritesView : IView {
 
     /**
-     * Hide all the content of the view.
-     */
-    fun hideAll()
-
-    /**
-     * Shows all the content of the view.
-     */
-    fun showAll()
-
-    /**
      * Populate the list of favorite [Show].
      */
     fun setFavorites(shows: List<Show>)
@@ -44,6 +34,6 @@ interface IFavoritesView : IView {
     /**
      * Remove from the list the show that was selected by the user to be unmarked as favorite.
      */
-    fun removeShowFromList()
+    fun removeShowFromList(position: Int)
 
 }

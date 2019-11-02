@@ -5,16 +5,6 @@ import com.svprdga.infinitescrollsample.domain.Show
 interface IListView : IView {
 
     /**
-     * Hide all the content of the view.
-     */
-    fun hideAll()
-
-    /**
-     * Shows all the content of the view.
-     */
-    fun showAll()
-
-    /**
      * Append a [List] of [Show] to the scrollable list.
      */
     fun appendShows(newShows: List<Show>)
