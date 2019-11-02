@@ -9,8 +9,7 @@ import com.svprdga.infinitescrollsample.domain.Show
 
 class ShowListAdapter(
     private val context: Context,
-    private val shows: List<Show>,
-    private val showListener: ShowListener
+    private val shows: List<Show>
 ) : RecyclerView.Adapter<ShowView>() {
 
     // ************************************* PUBLIC METHODS ************************************ //
@@ -18,7 +17,7 @@ class ShowListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowView {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.custom_show_entry, parent, false)
-        return ShowView(view)
+        return ShowView(context, view)
     }
 
     override fun getItemCount(): Int {
@@ -28,6 +27,6 @@ class ShowListAdapter(
 
     override fun onBindViewHolder(holder: ShowView, position: Int) {
         val show = shows[position]
-        holder.initializeView(show, context, showListener)
+        holder.initializeView(show)
     }
 }

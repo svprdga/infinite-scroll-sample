@@ -3,36 +3,21 @@ package com.svprdga.infinitescrollsample.presentation.ui.extra
 import android.content.Context
 import android.util.TypedValue
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IShowPresenter
+import com.svprdga.infinitescrollsample.presentation.presenter.view.IShowView
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-//import javax.inject.Inject
-
 private const val CARD_CORNER_RADIUS = 20
 
-interface ShowListener{
-    /**
-     * The user selected the given [show] as favorite.
-     */
-    fun onMakeFavorite(show: Show)
-
-    /**
-     * The user choosed to undo the favorite category for the given [show].
-     */
-    fun onUndoFavorite(show: Show, position: Int)
-}
-
-class ShowView(view: View) : RecyclerView.ViewHolder(view), KoinComponent {
+class ShowView(private val context: Context, view: View) : IShowView, RecyclerView.ViewHolder(view),
+    KoinComponent {
 
     // ************************************* INJECTED VARS ************************************* //
 
@@ -57,12 +42,15 @@ class ShowView(view: View) : RecyclerView.ViewHolder(view), KoinComponent {
 
     // ************************************* PUBLIC METHODS ************************************ //
 
-    fun initializeView(show: Show, context: Context, listener: ShowListener) {
+    fun initializeView(show: Show) {
+        presenter.show = show
+        presenter.bind(this)
 
         cardView.radius = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             CARD_CORNER_RADIUS.toFloat(),
-            context.resources.displayMetrics)
+            context.resources.displayMetrics
+        )
 
         nameTextView.text = show.name
         overviewTextView.text = show.overview
@@ -80,7 +68,19 @@ class ShowView(view: View) : RecyclerView.ViewHolder(view), KoinComponent {
         }
 
         favoriteButton.setOnClickListener {
-
+            presenter.favoriteButtonClick()
         }
+    }
+
+    override fun showSmallPopup(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun setFavoriteIcon() {
+        favoriteButton.setImageResource(R.drawable.ic_favorite_black_36dp)
+    }
+
+    override fun setUncheckedFavoriteIcon() {
+        favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_36dp)
     }
 }

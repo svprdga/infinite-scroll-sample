@@ -12,7 +12,6 @@ import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IFavoritesPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IFavoritesView
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
-import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import kotlinx.android.synthetic.main.fragment_list.recyclerView
 import org.koin.android.ext.android.inject
@@ -28,17 +27,6 @@ class FavoritesFragment : Fragment(), IFavoritesView {
     private var viewPosition: Int? = null
     private var shows: MutableList<Show> = mutableListOf()
     private var adapter: ShowListAdapter? = null
-
-    private var showListener = object : ShowListener {
-        override fun onUndoFavorite(show: Show, position: Int) {
-            viewPosition = position
-            presenter.makeShowNotFavorite(show)
-        }
-
-        override fun onMakeFavorite(show: Show) {
-            // Cannot happen on this context.
-        }
-    }
 
     // *************************************** LIFECYCLE *************************************** //
 
@@ -82,7 +70,7 @@ class FavoritesFragment : Fragment(), IFavoritesView {
         this.shows = shows.toMutableList()
 
         adapter =
-            ShowListAdapter(activity!!, this.shows, showListener)
+            ShowListAdapter(activity!!, this.shows)
         recyclerView.adapter = adapter
     }
 

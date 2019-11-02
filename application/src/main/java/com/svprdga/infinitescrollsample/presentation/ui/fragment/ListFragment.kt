@@ -14,7 +14,6 @@ import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.presentation.ui.extra.EndlessRecyclerViewScrollListener
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ItemDecoration
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
-import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.koin.android.ext.android.inject
 
@@ -29,17 +28,6 @@ class ListFragment : Fragment(), IListView {
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
     private var shows: MutableList<Show> = mutableListOf()
     private var showListAdapter: ShowListAdapter? = null
-
-    private var showListener = object : ShowListener {
-        override fun onUndoFavorite(show: Show, position: Int) {
-//            viewPosition = position
-//            presenter.makeShowNotFavorite(show)
-        }
-
-        override fun onMakeFavorite(show: Show) {
-            // Cannot happen on this context.
-        }
-    }
 
     // *************************************** LIFECYCLE *************************************** //
 
@@ -89,7 +77,7 @@ class ListFragment : Fragment(), IListView {
         shows.addAll(newShows)
 
         if (showListAdapter == null) {
-            showListAdapter = ShowListAdapter(activity!!, shows, showListener)
+            showListAdapter = ShowListAdapter(activity!!, shows)
             recyclerView.adapter = showListAdapter
         }
 
