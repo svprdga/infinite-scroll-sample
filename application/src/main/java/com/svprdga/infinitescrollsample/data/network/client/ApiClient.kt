@@ -11,9 +11,7 @@ import io.reactivex.Single
 import io.reactivex.functions.Consumer
 import retrofit2.HttpException
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
-@Singleton
 @Mockable
 class ApiClient(
     log: Logger,

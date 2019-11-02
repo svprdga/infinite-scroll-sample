@@ -30,7 +30,7 @@ class ShowRepositoryTest {
 
     // ****************************************** VARS ***************************************** //
 
-    lateinit var repository: ShowRepository
+    lateinit var repository: IShowRepository
 
     // ***************************************** SET UP **************************************** //
 
@@ -38,7 +38,7 @@ class ShowRepositoryTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
 
-        repository = ShowRepository(apiClient, mapper)
+        repository = IShowRepository(apiClient, mapper)
     }
 
     // ***************************************** TESTS ***************************************** //

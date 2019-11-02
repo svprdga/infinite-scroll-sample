@@ -1,13 +1,11 @@
 package com.svprdga.infinitescrollsample.util
 
 import android.util.Log
-import com.svprdga.infinitescrollsample.di.annotations.PerUiComponent
 import com.svprdga.infinitescrollsample.domain.Mockable
 
 /**
  * Main log class.
  */
-@PerUiComponent
 @Mockable
 class Logger(private val tag: String) {
 
