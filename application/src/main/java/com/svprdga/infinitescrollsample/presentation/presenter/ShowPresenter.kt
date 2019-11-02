@@ -2,6 +2,7 @@ package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
+import com.svprdga.infinitescrollsample.domain.usecase.ShowsUseCase
 import com.svprdga.infinitescrollsample.presentation.eventbus.FavoriteEvent
 import com.svprdga.infinitescrollsample.presentation.eventbus.FavoritesBus
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IShowPresenter
@@ -13,7 +14,7 @@ import io.reactivex.disposables.Disposable
 
 class ShowPresenter(
     private val log: Logger,
-    private val showRepository: IShowRepository,
+    private val showsUseCase: ShowsUseCase,
     private val textProvider: TextProvider,
     private val favoritesBus: FavoritesBus
 ) : IShowPresenter {
@@ -73,10 +74,10 @@ class ShowPresenter(
     override fun favoriteButtonClick() {
         show?.let {
             if (it.isFavorite) {
-                showRepository.removeFavorite(it)
+                showsUseCase.removeFavorite(it)
                     .subscribe(removeFavoriteListener)
             } else {
-                showRepository.insertShow(it)
+                showsUseCase.insertShow(it)
                     .subscribe(addFavoriteListener)
             }
         }

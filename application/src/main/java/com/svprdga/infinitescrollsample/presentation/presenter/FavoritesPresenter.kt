@@ -2,6 +2,7 @@ package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
+import com.svprdga.infinitescrollsample.domain.usecase.ShowsUseCase
 import com.svprdga.infinitescrollsample.presentation.eventbus.AppFragment
 import com.svprdga.infinitescrollsample.presentation.eventbus.FragmentNavBus
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IFavoritesPresenter
@@ -15,7 +16,7 @@ import io.reactivex.observers.DisposableObserver
 
 class FavoritesPresenter(
     private val log: Logger,
-    private val showRepository: IShowRepository,
+    private val showsUseCase: ShowsUseCase,
     private val textProvider: TextProvider,
     private val navBus: FragmentNavBus
 ) : IFavoritesPresenter {
@@ -51,7 +52,7 @@ class FavoritesPresenter(
                 view?.hideAll()
             } else {
                 view?.showAll()
-                showRepository.findAllFavorites()
+                showsUseCase.findAllFavoritesAsync()
                     .subscribe(observer)
             }
         }
@@ -72,7 +73,7 @@ class FavoritesPresenter(
         navBus.getNewSearch().subscribe(navDisposable)
 
         // Load the favorites list.
-        showRepository.findAllFavorites()
+        showsUseCase.findAllFavoritesAsync()
             .subscribe(observer)
     }
 
@@ -82,7 +83,7 @@ class FavoritesPresenter(
     }
 
     override fun makeShowNotFavorite(show: Show) {
-        showRepository.removeFavorite(show)
+        showsUseCase.removeFavorite(show)
             .subscribe(object : CompletableObserver {
                 override fun onSubscribe(d: Disposable) {
                     // Not needed

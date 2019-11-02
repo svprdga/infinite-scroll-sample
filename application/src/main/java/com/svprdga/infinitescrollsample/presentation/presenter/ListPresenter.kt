@@ -2,6 +2,7 @@ package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.svprdga.infinitescrollsample.domain.ShowData
 import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
+import com.svprdga.infinitescrollsample.domain.usecase.ShowsUseCase
 import com.svprdga.infinitescrollsample.presentation.eventbus.AppFragment
 import com.svprdga.infinitescrollsample.presentation.eventbus.FragmentNavBus
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
@@ -13,7 +14,7 @@ import io.reactivex.observers.DisposableObserver
 
 class ListPresenter(
     private val log: Logger,
-    private val showRepository: IShowRepository,
+    private val showsUseCase: ShowsUseCase,
     private val navBus: FragmentNavBus
 ) : IListPresenter {
 
@@ -65,7 +66,7 @@ class ListPresenter(
         navBus.getNewSearch().subscribe(navDisposable)
 
         // Fetch first items.
-        showRepository.findPopularShows(currentPage)
+        showsUseCase.findPopularShows(currentPage)
             .subscribe(popularShowsObserver)
     }
 
@@ -77,7 +78,7 @@ class ListPresenter(
     override fun loadNextShowSet() {
         // Check that the next set exists
         if (!isLastPage) {
-            showRepository.findPopularShows(++currentPage)
+            showsUseCase.findPopularShows(++currentPage)
                 .subscribe(popularShowsObserver)
         }
     }

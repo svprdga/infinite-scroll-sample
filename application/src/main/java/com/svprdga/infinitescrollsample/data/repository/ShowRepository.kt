@@ -26,9 +26,13 @@ class ShowRepository(
         return showDao.insert(mapper.showToShowDbEntity(show))
     }
 
-    override fun findAllFavorites(): Single<List<Show>> {
-        return showDao.findAll()
-            .map { entities -> mapper.showDbEntitiesToShows().apply(entities) }
+    override fun findAllFavoritesAsync(): Single<List<Show>> {
+        return showDao.findAllAsync()
+            .map { entities -> mapper.showDbEntitiesToShowsAsync().apply(entities) }
+    }
+
+    override fun findAllFavorites(): List<Show> {
+        return mapper.showDbEntitiesToShows(showDao.findAll())
     }
 
     override fun removeFavorite(show: Show): Completable {

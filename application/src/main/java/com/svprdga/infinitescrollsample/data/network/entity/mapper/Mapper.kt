@@ -51,20 +51,31 @@ class Mapper {
 
     /**
      * Map an [Array] of [ShowDbEntity] to a [List] of [Show].
+     *
+     * Use it for non-async execution.
      */
-    fun showDbEntitiesToShows(): Function<Array<ShowDbEntity>, List<Show>> {
+    fun showDbEntitiesToShows(entities: Array<ShowDbEntity>): List<Show> {
+        val list = arrayListOf<Show>()
+
+        entities.forEach { entity ->
+            val show = Show(
+                entity.id, entity.name, entity.overview, entity.averageRating, entity.imagePath,
+                true
+            )
+            list.add(show)
+        }
+
+        return list
+    }
+
+    /**
+     * Map an [Array] of [ShowDbEntity] to a [List] of [Show].
+     *
+     * Use it for async execution.
+     */
+    fun showDbEntitiesToShowsAsync(): Function<Array<ShowDbEntity>, List<Show>> {
         return Function {
-            val list = arrayListOf<Show>()
-
-            it.forEach { entity ->
-                val show = Show(
-                    entity.id, entity.name, entity.overview, entity.averageRating, entity.imagePath,
-                    true
-                )
-                list.add(show)
-            }
-
-            list
+            showDbEntitiesToShows(it)
         }
     }
 

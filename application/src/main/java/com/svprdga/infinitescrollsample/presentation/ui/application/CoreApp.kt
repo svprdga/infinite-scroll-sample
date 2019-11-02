@@ -23,7 +23,8 @@ class CoreApp : Application() {
                     presenterModule,
                     repositoryModule,
                     rxModule,
-                    utilModule
+                    utilModule,
+                    useCaseModule
                 )
             )
         }

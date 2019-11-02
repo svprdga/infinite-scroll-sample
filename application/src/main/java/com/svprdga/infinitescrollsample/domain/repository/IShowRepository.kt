@@ -26,9 +26,20 @@ interface IShowRepository {
     /**
      * Retrieve the list of favorite [Show].
      *
+     * Use it for async execution.
+     *
      * @return a [Single] with a [List] of [Show].
      */
-    fun findAllFavorites(): Single<List<Show>>
+    fun findAllFavoritesAsync(): Single<List<Show>>
+
+    /**
+     * Retrieve the list of favorite [Show].
+     *
+     * Use it for non-async execution.
+     *
+     * @return a [List] of [Show].
+     */
+    fun findAllFavorites(): List<Show>
 
     /**
      * Remove the given [Show] from favorites.

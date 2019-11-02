@@ -10,4 +10,14 @@ data class Show(
     val averageRating: Float,
     val imagePath: String?,
     var isFavorite: Boolean
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Show) {
+            id == other.id
+        } else {
+            super.equals(other)
+        }
+
+    }
+}

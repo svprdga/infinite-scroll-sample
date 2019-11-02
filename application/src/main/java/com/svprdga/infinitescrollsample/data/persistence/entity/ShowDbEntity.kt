@@ -1,5 +1,6 @@
 package com.svprdga.infinitescrollsample.data.persistence.entity
 
+import com.svprdga.infinitescrollsample.domain.Show
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmField
@@ -14,4 +15,14 @@ open class ShowDbEntity(
     @RealmField("image_path")
     open var imagePath: String? = null
 ) :
-    RealmObject()
+    RealmObject() {
+
+    override fun equals(other: Any?): Boolean {
+
+        return if (other is Show) {
+            id == other.id
+        } else {
+            super.equals(other)
+        }
+    }
+}

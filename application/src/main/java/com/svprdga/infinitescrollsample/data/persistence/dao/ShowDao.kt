@@ -15,18 +15,25 @@ class ShowDao(
 
     /**
      * Find all the favorite [ShowDbEntity].
+     *
+     * Use it for non-async execution.
+     * @return [Array] of [ShowDbEntity].
+     */
+    fun findAll(): Array<ShowDbEntity> {
+        val entities =  realm.where(ShowDbEntity::class.java).findAll()
+        return entities?.toTypedArray() ?: emptyArray()
+    }
+
+    /**
+     * Find all the favorite [ShowDbEntity].
+     *
+     * Use it for async execution.
      * @return [Single] with an [Array] of found [ShowDbEntity].
      */
-    fun findAll(): Single<Array<ShowDbEntity>> {
+    fun findAllAsync(): Single<Array<ShowDbEntity>> {
         return object : Single<Array<ShowDbEntity>>() {
             override fun subscribeActual(observer: SingleObserver<in Array<ShowDbEntity>>) {
-                val entities = realm.where(ShowDbEntity::class.java).findAll()
-
-                if (entities != null) {
-                    observer.onSuccess(entities.toTypedArray())
-                } else {
-                    observer.onSuccess(emptyArray())
-                }
+                observer.onSuccess(findAll())
             }
         }
     }
