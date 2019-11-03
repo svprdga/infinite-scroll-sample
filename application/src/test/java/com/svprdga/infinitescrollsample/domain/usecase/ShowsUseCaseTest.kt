@@ -8,11 +8,9 @@ import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
 import de.bechte.junit.runners.context.HierarchicalContextRunner
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
 import io.reactivex.observers.TestObserver
+import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -52,19 +50,25 @@ class ShowsUseCaseTest {
 
     inner class `when calling findPopularShows()` {
 
-        private var single: TestObserver<ShowData>? = null
+        private lateinit var single: TestObserver<ShowData>
 
         @Before
         fun setUp() {
+            whenever(showRepository.findAllFavorites()).thenReturn(favorites)
             whenever(showRepository.findPopularShows(1))
                 .thenReturn(Single.just(showData))
 
             single = useCase.findPopularShows(1).test()
         }
 
+        @After
+        fun finalize() {
+            single.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            single!!.assertSubscribed()
+            single.assertSubscribed()
         }
 
         @Test
@@ -74,34 +78,26 @@ class ShowsUseCaseTest {
 
         @Test
         fun `should mark favorites as favorites`() {
-            useCase.findPopularShows(1)
-                .subscribe(object : SingleObserver<ShowData> {
-                    override fun onSubscribe(d: Disposable) {
-                        // Nothing.
-                    }
+            single.assertValueAt(0) {
+                var assert = false
 
-                    override fun onError(e: Throwable) {
-                        // Test failed.
-                        assertTrue(false)
-                    }
+                for (i in 0..TOTAL_ITEMS) {
 
-                    override fun onSuccess(data: ShowData) {
+                    val shouldBeFavorite = i % FAVORITE_EACH == 0
 
-                        for (i in 0..TOTAL_ITEMS) {
+                    assert = shouldBeFavorite == it.shows[i].isFavorite
+                    if (!assert) break
+                }
 
-                            val shouldBeFavorite = i % FAVORITE_EACH == 0
-
-                            assertEquals(shouldBeFavorite, data.shows[i].isFavorite)
-                        }
-                    }
-                })
+                assert
+            }
         }
 
     }
 
     inner class `when calling insertShow`() {
 
-        private var completable: TestObserver<Void>? = null
+        private lateinit var completable: TestObserver<Void>
         private lateinit var show: Show
 
         @Before
@@ -112,21 +108,26 @@ class ShowsUseCaseTest {
             completable = useCase.insertShow(show).test()
         }
 
+        @After
+        fun finalize() {
+            completable.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            completable!!.assertSubscribed()
+            completable.assertSubscribed()
         }
 
         @Test
         fun `should complete`() {
-            completable!!.assertComplete()
+            completable.assertComplete()
         }
 
     }
 
     inner class `when calling findAllFavoritesAsync`() {
 
-        private var single: TestObserver<List<Show>>? = null
+        private lateinit var single: TestObserver<List<Show>>
 
         @Before
         fun setUp() {
@@ -136,14 +137,19 @@ class ShowsUseCaseTest {
             single = useCase.findAllFavoritesAsync().test()
         }
 
+        @After
+        fun finalize() {
+            single.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            single!!.assertSubscribed()
+            single.assertSubscribed()
         }
 
         @Test
         fun `should return a list of Show`() {
-            single!!.assertValue(shows)
+            single.assertValue(shows)
         }
 
     }
@@ -160,7 +166,7 @@ class ShowsUseCaseTest {
 
     inner class `when calling removeFavorite()` {
 
-        private var completable: TestObserver<Void>? = null
+        private lateinit var completable: TestObserver<Void>
         private lateinit var show: Show
 
         @Before
@@ -171,14 +177,19 @@ class ShowsUseCaseTest {
             completable = useCase.removeFavorite(show).test()
         }
 
+        @After
+        fun finalize() {
+            completable.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            completable!!.assertSubscribed()
+            completable.assertSubscribed()
         }
 
         @Test
         fun `should complete`() {
-            completable!!.assertComplete()
+            completable.assertComplete()
         }
 
     }

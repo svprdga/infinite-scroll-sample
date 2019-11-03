@@ -15,7 +15,8 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.functions.Function
-import junit.framework.Assert.assertEquals
+import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -63,7 +64,7 @@ class ShowRepositoryTest {
 
     inner class `when calling findPopularShows()` {
 
-        private var single: TestObserver<ShowData>? = null
+        private lateinit var single: TestObserver<ShowData>
 
         @Before
         fun setUp() {
@@ -78,21 +79,26 @@ class ShowRepositoryTest {
             single = repository.findPopularShows(1).test()
         }
 
+        @After
+        fun finalize() {
+            single.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            single!!.assertSubscribed()
+            single.assertSubscribed()
         }
 
         @Test
         fun `should return a mapped ShowData`() {
-            single!!.assertValue(showData)
+            single.assertValue(showData)
         }
 
     }
 
     inner class `when calling insertShow()` {
 
-        private var completable: TestObserver<Void>? = null
+        private lateinit var completable: TestObserver<Void>
 
         @Before
         fun setUp() {
@@ -103,20 +109,25 @@ class ShowRepositoryTest {
             completable = repository.insertShow(show).test()
         }
 
+        @After
+        fun finalize() {
+            completable.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            completable!!.assertSubscribed()
+            completable.assertSubscribed()
         }
 
         @Test
         fun `should complete`() {
-            completable!!.assertComplete()
+            completable.assertComplete()
         }
     }
 
     inner class `when calling findAllFavoritesAsync()` {
 
-        private var single: TestObserver<List<Show>>? = null
+        private lateinit var single: TestObserver<List<Show>>
 
         @Before
         fun setUp() {
@@ -130,14 +141,19 @@ class ShowRepositoryTest {
             single = repository.findAllFavoritesAsync().test()
         }
 
+        @After
+        fun finalize() {
+            single.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            single!!.assertSubscribed()
+            single.assertSubscribed()
         }
 
         @Test
         fun `should return a list of Show`() {
-            single!!.assertValue(showList)
+            single.assertValue(showList)
         }
     }
 
@@ -153,7 +169,7 @@ class ShowRepositoryTest {
 
     inner class `when calling removeFavorite()` {
 
-        private var completable: TestObserver<Void>? = null
+        private lateinit var completable: TestObserver<Void>
 
         @Before
         fun setUp() {
@@ -163,14 +179,19 @@ class ShowRepositoryTest {
             completable =  repository.removeFavorite(show).test()
         }
 
+        @After
+        fun finalize() {
+            completable.dispose()
+        }
+
         @Test
         fun `should subscribe`() {
-            completable!!.assertSubscribed()
+            completable.assertSubscribed()
         }
 
         @Test
         fun `should complete`() {
-            completable!!.assertComplete()
+            completable.assertComplete()
         }
 
     }

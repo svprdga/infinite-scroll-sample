@@ -5,13 +5,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import com.svprdga.infinitescrollsample.data.persistence.entity.ShowDbEntity
 import com.svprdga.infinitescrollsample.domain.Show
 import de.bechte.junit.runners.context.HierarchicalContextRunner
-import io.reactivex.CompletableObserver
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
+import io.reactivex.observers.TestObserver
 import io.realm.Realm
 import io.realm.RealmQuery
 import io.realm.RealmResults
-import org.junit.Assert.assertEquals
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -75,27 +73,26 @@ class ShowDaoTest {
 
         inner class `given no elements` {
 
+            private lateinit var single: TestObserver<Array<ShowDbEntity>>
+
             @Before
             fun setUp() {
                 whenever(realm.where(ShowDbEntity::class.java)).thenReturn(realmQuery)
                 whenever(realmQuery.findAll()).thenReturn(null)
+
+                single = dao.findAllAsync().test()
+            }
+
+            @After
+            fun finalize() {
+                single.dispose()
             }
 
             @Test
-            fun `should emit an empty array`(){
-                dao.findAllAsync().subscribe(object : SingleObserver<Array<ShowDbEntity>> {
-                    override fun onSuccess(array: Array<ShowDbEntity>) {
-                        assertTrue(array.isEmpty())
-                    }
-
-                    override fun onError(e: Throwable) {
-                        assertTrue(false)
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                        // Nothing.
-                    }
-                })
+            fun `should emit an empty array`() {
+                single.assertValue { array ->
+                    array.isEmpty()
+                }
             }
         }
     }
@@ -106,47 +103,46 @@ class ShowDaoTest {
 
             @Test
             fun `should complete with the transaction commited`() {
-                dao.insert(entity).subscribe(object : CompletableObserver {
-                    override fun onComplete() {
-                        verify(realm).commitTransaction()
-                    }
-
-                    override fun onError(e: Throwable) {
-                        assertTrue(false)
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                        // Nothing.
-                    }
-                })
+                val completable = dao.insert(entity).test()
+                completable.assertOf {
+                    verify(realm).commitTransaction()
+                }
+                completable.dispose()
             }
         }
 
         inner class `given insert error` {
 
+            private lateinit var completable: TestObserver<Void>
+
+            @Before
+            fun setUp() {
+                whenever(realm.copyToRealm(entity)).thenThrow(exception)
+                completable = dao.insert(entity).test()
+            }
+
+            @After
+            fun finalize() {
+                completable.dispose()
+            }
+
             @Test
             fun `should emit error with the transaction commited`() {
-                whenever(realm.copyToRealm(entity)).thenThrow(exception)
+                completable.assertOf {
+                    verify(realm).commitTransaction()
+                }
+            }
 
-                dao.insert(entity).subscribe(object : CompletableObserver {
-                    override fun onComplete() {
-                        assertTrue(false)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        assertEquals(exception, e)
-                        verify(realm).commitTransaction()
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                        // Nothing.
-                    }
-                })
+            @Test
+            fun `should emit exception`() {
+                completable.assertError(exception)
             }
         }
     }
 
     inner class `when calling delete()` {
+
+        private lateinit var completable: TestObserver<Void>
 
         @Before
         fun setUp() {
@@ -157,44 +153,48 @@ class ShowDaoTest {
 
         inner class `given correct delete` {
 
+            @Before
+            fun setUp() {
+                completable = dao.delete(show).test()
+            }
+
+            @After
+            fun finalize() {
+                completable.dispose()
+            }
+
             @Test
             fun `should complete with the transaction commited`() {
-                dao.delete(show).subscribe(object : CompletableObserver {
-                    override fun onComplete() {
-                        verify(realm).commitTransaction()
-                    }
-
-                    override fun onError(e: Throwable) {
-                        assertTrue(false)
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                        // Nothing.
-                    }
-                })
+                completable.assertOf {
+                    verify(realm).commitTransaction()
+                }
             }
         }
 
         inner class `given delete error` {
 
-            @Test
-            fun `should emit error with the transaction commited`() {
+            @Before
+            fun setUp() {
                 whenever(realmResults.deleteAllFromRealm()).thenThrow(exception)
 
-                dao.delete(show).subscribe(object : CompletableObserver {
-                    override fun onComplete() {
-                        assertTrue(false)
-                    }
+                completable = dao.delete(show).test()
+            }
 
-                    override fun onError(e: Throwable) {
-                        assertEquals(exception, e)
-                        verify(realm).commitTransaction()
-                    }
+            @After
+            fun finalize() {
+                completable.dispose()
+            }
 
-                    override fun onSubscribe(d: Disposable) {
-                        // Nothing.
-                    }
-                })
+            @Test
+            fun `should emit error with the transaction commited`() {
+                completable.assertOf {
+                    verify(realm).commitTransaction()
+                }
+            }
+
+            @Test
+            fun `should emit error`() {
+                completable.assertError(exception)
             }
         }
     }

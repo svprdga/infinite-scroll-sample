@@ -12,6 +12,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.exceptions.CompositeException
 import io.reactivex.observers.TestObserver
 import io.reactivex.schedulers.Schedulers
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -63,7 +64,7 @@ class ApiClientTest {
 
         inner class `given OK response` {
 
-            private var single: TestObserver<PopularShowsResponse>? = null
+            private lateinit var single: TestObserver<PopularShowsResponse>
 
             @Before
             fun setUp() {
@@ -73,20 +74,26 @@ class ApiClientTest {
                 single = client.getPopularShows(1).test()
             }
 
+            @After
+            fun finalize() {
+                single.dispose()
+            }
+
             @Test
             fun `should subscribe`() {
-                single!!.assertSubscribed()
+                single.assertSubscribed()
             }
 
             @Test
             fun `should return an instance of RecipesResponse`() {
-                single!!.assertValue(response)
+                single.assertValue(response)
             }
 
         }
 
         inner class `given KO response with a HttpException` {
 
+            private lateinit var single: TestObserver<PopularShowsResponse>
             private val code = 404
             private val message = "this is the error message"
 
@@ -98,70 +105,20 @@ class ApiClientTest {
                     .thenReturn(Single.error(httpException))
             }
 
-            @Test
-            fun `should throw a KoException in a CompositeException`() {
-                client.getPopularShows(1).subscribe(
-                    object : SingleObserver<PopularShowsResponse> {
-                        override fun onSubscribe(d: Disposable) {
-                            // Nothing.
-                        }
-
-                        override fun onSuccess(t: PopularShowsResponse) {
-                            // Test failed.
-                            Assert.assertTrue(false)
-                        }
-
-                        override fun onError(exception: Throwable) {
-                            assert(exception is CompositeException)
-                            val compositeException = exception as CompositeException
-
-                            compositeException.exceptions.forEach { innerException ->
-                                if (innerException is KoException) {
-                                    Assert.assertEquals(code, innerException.statusCode)
-                                }
-                            }
-                        }
-                    }
-                )
-            }
-
-        }
-
-        inner class `given KO response with an Exception` {
-
-            private val exception = Exception()
-
-            @Before
-            fun setUp() {
-                whenever(api.getPopularShows(API_KEY, "en-US", 1))
-                    .thenReturn(Single.error(exception))
+            @After
+            fun finalize() {
+                single.dispose()
             }
 
             @Test
-            fun `should throw two Exceptions in a CompositeException`() {
-                client.getPopularShows(1).subscribe(
-                    object : SingleObserver<PopularShowsResponse> {
-                        override fun onSubscribe(d: Disposable) {
-                            // Nothing.
-                        }
+            fun `should throw a CompositeException`() {
 
-                        override fun onSuccess(t: PopularShowsResponse) {
-                            // Test failed.
-                            Assert.assertTrue(false)
-                        }
+                single = client.getPopularShows(1).test()
 
-                        override fun onError(exception: Throwable) {
-                            assert(exception is CompositeException)
-                            val compositeException = exception as CompositeException
-
-                            compositeException.exceptions.forEach { innerException ->
-                                Assert.assertTrue(innerException is java.lang.Exception)
-                            }
-                        }
-                    }
-                )
+                single.assertError { exception ->
+                    exception is CompositeException
+                }
             }
-
         }
 
     }

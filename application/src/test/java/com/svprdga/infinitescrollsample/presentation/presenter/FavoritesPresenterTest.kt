@@ -45,6 +45,12 @@ class FavoritesPresenterTest {
         }
     }
 
+    val singleSuccessOneShow = object : Single<List<Show>>() {
+        override fun subscribeActual(observer: SingleObserver<in List<Show>>) {
+            observer.onSuccess(listOf(shows[0]))
+        }
+    }
+
     val singleSuccessEmpty = object : Single<List<Show>>() {
         override fun subscribeActual(observer: SingleObserver<in List<Show>>) {
             observer.onSuccess(arrayListOf())
@@ -169,6 +175,7 @@ class FavoritesPresenterTest {
             @Before
             fun setUp() {
                 show = shows[0]
+                whenever(showsUseCase.findAllFavoritesAsync()).thenReturn(singleSuccessOneShow)
 
                 show.isFavorite = false
                 presenter.bind(view)
@@ -182,7 +189,7 @@ class FavoritesPresenterTest {
 
             @Test
             fun `should show empty favorites layout in view`() {
-                verify(view).hideEmptyFavoritesLayout()
+                verify(view).showEmptyFavoritesLayout()
             }
 
         }
