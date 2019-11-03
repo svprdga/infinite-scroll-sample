@@ -3,6 +3,11 @@
     <!-- Common -->
     <string name="appName">Infinite Scroll Sample</string>
     <string name="unexpectedError">An unexpected error occurred, please try again</string>
+    <string name="ok">OK</string>
+
+    <!-- Main -->
+    <string name="main_about">About</string>
+    <string name="main_aboutDesc">Sample application written by David Serrano Canales. This is an open source project licensed under the Apache License 2.0.</string>
 
     <!-- List -->
     <string name="list_title">TV Shows</string>
@@ -18,9 +23,5 @@
     <string name="favorites_noFavoritesMessage">Here you can list all your favorite TV shows. Just click the \'Make favorite\' button below each TV show and it will be shown here!</string>
     <string name="favorites_removed">Show removed from favorites</string>
     <string name="favorites_noFavoritesContentDescription">Image showing that there are no favorites.</string>
-
-    <!-- Show -->
-    <string name="show_removedFavorites">TV Show was successfully removed from favorites</string>
-    <string name="show_addedFavorites">TV Show was successfully added to your favorites!</string>
 
 </resources>

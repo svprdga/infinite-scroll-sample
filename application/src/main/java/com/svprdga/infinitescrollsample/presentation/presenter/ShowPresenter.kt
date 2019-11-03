@@ -33,7 +33,6 @@ class ShowPresenter(
         }
 
         override fun onComplete() {
-            view?.showSmallPopup(textProvider.showRemovedFavorites)
             show?.isFavorite = false
             view?.setUncheckedFavoriteIcon()
             favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
@@ -51,7 +50,6 @@ class ShowPresenter(
         }
 
         override fun onComplete() {
-            view?.showSmallPopup(textProvider.showAddedFavorites)
             show?.isFavorite = true
             favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
             view?.setFavoriteIcon()

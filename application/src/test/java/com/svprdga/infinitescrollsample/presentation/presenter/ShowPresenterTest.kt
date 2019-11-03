@@ -64,8 +64,6 @@ class ShowPresenterTest {
 
     val layoutPosition = 26
     val unexpectedError = "unexpectedError"
-    val showAddedFavorites = "showAddedFavorites"
-    val showRemovedFavorites = "showRemovedFavorites"
 
     // ***************************************** SET UP **************************************** //
 
@@ -74,8 +72,6 @@ class ShowPresenterTest {
         MockitoAnnotations.initMocks(this)
 
         whenever(textProvider.unexpectedError).thenReturn(unexpectedError)
-        whenever(textProvider.showAddedFavorites).thenReturn(showAddedFavorites)
-        whenever(textProvider.showRemovedFavorites).thenReturn(showRemovedFavorites)
 
         presenter = ShowPresenter(log, showsUseCase, textProvider, favoritesBus)
     }
@@ -119,11 +115,6 @@ class ShowPresenterTest {
                     whenever(showsUseCase.removeFavorite(show))
                         .thenReturn(completableSuccess)
                     presenter.favoriteButtonClick(layoutPosition)
-                }
-
-                @Test
-                fun `should show info message in view`() {
-                    verify(view).showSmallPopup(showRemovedFavorites)
                 }
 
                 @Test
@@ -174,11 +165,6 @@ class ShowPresenterTest {
                     whenever(showsUseCase.insertShow(show))
                         .thenReturn(completableSuccess)
                     presenter.favoriteButtonClick(layoutPosition)
-                }
-
-                @Test
-                fun `should show info message in view`() {
-                    verify(view).showSmallPopup(showAddedFavorites)
                 }
 
                 @Test
