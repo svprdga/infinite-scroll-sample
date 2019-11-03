@@ -19,6 +19,6 @@ val presenterModule = module {
     }
 
     factory<IShowPresenter> {
-        ShowPresenter(get(), get(), get(), get(), get())
+        ShowPresenter(get(), get(), get(), get())
     }
 }

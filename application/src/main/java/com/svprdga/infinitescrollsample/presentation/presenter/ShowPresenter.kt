@@ -17,8 +17,7 @@ class ShowPresenter(
     private val log: Logger,
     private val showsUseCase: ShowsUseCase,
     private val textProvider: TextProvider,
-    private val favoritesBus: FavoritesBus,
-    private val handler: Handler
+    private val favoritesBus: FavoritesBus
 ) : IShowPresenter {
 
     // ****************************************** VARS ***************************************** //
@@ -37,9 +36,7 @@ class ShowPresenter(
             view?.showSmallPopup(textProvider.showRemovedFavorites)
             show?.isFavorite = false
             view?.setUncheckedFavoriteIcon()
-            handler.post {
-                favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
-            }
+            favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
         }
 
         override fun onError(e: Throwable) {
