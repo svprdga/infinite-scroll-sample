@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.1.1]- 2019-11-03
+### Fixed
+- Make application always go back in the apps stack when pressing back button.
+
 ## [1.1.0] - 2019-11-03
 ### Added
 - Retries when any network request times out.
