@@ -1,18 +1,12 @@
 package com.svprdga.infinitescrollsample.di.module
 
-import com.svprdga.infinitescrollsample.data.network.client.ApiClient
-import com.svprdga.infinitescrollsample.data.network.entity.mapper.Mapper
 import com.svprdga.infinitescrollsample.data.repository.ShowRepository
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
+import org.koin.dsl.module
 
-@Module
-class RepositoryModule {
+val repositoryModule = module {
 
-    @Provides
-    @Singleton
-    fun provideShowRepository(apiClient: ApiClient, mapper: Mapper): ShowRepository {
-        return ShowRepository(apiClient, mapper)
+    single<IShowRepository> {
+        ShowRepository(get(), get(), get())
     }
 }

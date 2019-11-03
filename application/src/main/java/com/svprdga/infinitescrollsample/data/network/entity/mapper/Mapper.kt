@@ -1,6 +1,7 @@
 package com.svprdga.infinitescrollsample.data.network.entity.mapper
 
 import com.svprdga.infinitescrollsample.data.network.entity.PopularShowsResponse
+import com.svprdga.infinitescrollsample.data.persistence.entity.ShowDbEntity
 import com.svprdga.infinitescrollsample.domain.*
 import io.reactivex.functions.Function
 
@@ -25,12 +26,56 @@ class Mapper {
                         entity.name,
                         entity.overview,
                         entity.averageRating,
-                        imagePath
+                        imagePath,
+                        false
                     )
                 )
             }
 
             ShowData(it.page, it.page >= it.totalPages, list)
+        }
+    }
+
+    /**
+     * Map a [Show] to [ShowDbEntity].
+     */
+    fun showToShowDbEntity(show: Show): ShowDbEntity {
+        return ShowDbEntity(
+            show.id,
+            show.name,
+            show.overview,
+            show.averageRating,
+            show.imagePath
+        )
+    }
+
+    /**
+     * Map an [Array] of [ShowDbEntity] to a [List] of [Show].
+     *
+     * Use it for non-async execution.
+     */
+    fun showDbEntitiesToShows(entities: Array<ShowDbEntity>): List<Show> {
+        val list = arrayListOf<Show>()
+
+        entities.forEach { entity ->
+            val show = Show(
+                entity.id, entity.name, entity.overview, entity.averageRating, entity.imagePath,
+                true
+            )
+            list.add(show)
+        }
+
+        return list
+    }
+
+    /**
+     * Map an [Array] of [ShowDbEntity] to a [List] of [Show].
+     *
+     * Use it for async execution.
+     */
+    fun showDbEntitiesToShowsAsync(): Function<Array<ShowDbEntity>, List<Show>> {
+        return Function {
+            showDbEntitiesToShows(it)
         }
     }
 

@@ -1,10 +1,10 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.*
-import com.svprdga.infinitescrollsample.data.repository.ShowRepository
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.domain.ShowData
 import com.svprdga.infinitescrollsample.domain.exception.KoException
+import com.svprdga.infinitescrollsample.domain.usecase.ShowsUseCase
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.util.Logger
 import de.bechte.junit.runners.context.HierarchicalContextRunner
@@ -24,7 +24,7 @@ class ListPresenterTest {
     @Mock
     lateinit var log: Logger
     @Mock
-    lateinit var showRepository: ShowRepository
+    lateinit var showsUseCase: ShowsUseCase
     @Mock
     lateinit var view: IListView
     @Mock
@@ -60,14 +60,15 @@ class ListPresenterTest {
                     i, "name_$i",
                     "overview_$i",
                     i.toFloat(),
-                    "path_$1"
+                    "path_$1",
+                    false
                 )
-            );
+            )
         }
 
         whenever(showData.shows).thenReturn(shows)
 
-        presenter = ListPresenter(log, showRepository)
+        presenter = ListPresenter(log, showsUseCase)
     }
 
     // ***************************************** TESTS ***************************************** //
@@ -76,13 +77,13 @@ class ListPresenterTest {
 
         @Before
         fun setUp() {
-            whenever(showRepository.findPopularShows(1)).thenReturn(singleSuccess)
+            whenever(showsUseCase.findPopularShows(1)).thenReturn(singleSuccess)
         }
 
         @Test
         fun `should fetch initial set of items`() {
             presenter.bind(view)
-            verify(showRepository).findPopularShows(1)
+            verify(showsUseCase).findPopularShows(1)
         }
 
         inner class `given success when fetching content`() {
@@ -99,7 +100,7 @@ class ListPresenterTest {
 
             @Before
             fun setUp() {
-                whenever(showRepository.findPopularShows(1)).thenReturn(singleError)
+                whenever(showsUseCase.findPopularShows(1)).thenReturn(singleError)
                 presenter.bind(view)
             }
 
@@ -123,7 +124,7 @@ class ListPresenterTest {
 
             @Before
             fun setUp() {
-                whenever(showRepository.findPopularShows(1)).thenReturn(singleSuccess)
+                whenever(showsUseCase.findPopularShows(1)).thenReturn(singleSuccess)
                 whenever(showData.isLastPage).thenReturn(true)
                 presenter.bind(view)
                 presenter.loadNextShowSet()
@@ -131,7 +132,7 @@ class ListPresenterTest {
 
             @Test
             fun `should do nothing`() {
-                verify(showRepository, never()).findPopularShows(2)
+                verify(showsUseCase, never()).findPopularShows(2)
             }
 
         }
@@ -140,8 +141,8 @@ class ListPresenterTest {
 
             @Before
             fun setUp() {
-                whenever(showRepository.findPopularShows(1)).thenReturn(singleSuccess)
-                whenever(showRepository.findPopularShows(2)).thenReturn(singleSuccess)
+                whenever(showsUseCase.findPopularShows(1)).thenReturn(singleSuccess)
+                whenever(showsUseCase.findPopularShows(2)).thenReturn(singleSuccess)
                 whenever(showData.isLastPage).thenReturn(false)
                 presenter.bind(view)
                 presenter.loadNextShowSet()

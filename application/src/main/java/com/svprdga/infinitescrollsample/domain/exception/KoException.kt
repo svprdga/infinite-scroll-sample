@@ -4,7 +4,7 @@ package com.svprdga.infinitescrollsample.domain.exception
  * Exception class used when a remote server responds with a KO result.
  */
 class KoException(
-    private val statusCode: Int,
+    val statusCode: Int,
     private val errors: List<String?>? = listOf()) : Exception() {
 
     // ****************************************** VARS ***************************************** //
