@@ -1,10 +1,10 @@
 package com.svprdga.infinitescrollsample.presentation.presenter
 
 import com.nhaarman.mockitokotlin2.*
-import com.svprdga.infinitescrollsample.data.repository.IShowRepository
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.domain.ShowData
 import com.svprdga.infinitescrollsample.domain.exception.KoException
+import com.svprdga.infinitescrollsample.domain.repository.IShowRepository
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
 import com.svprdga.infinitescrollsample.util.Logger
 import de.bechte.junit.runners.context.HierarchicalContextRunner
@@ -60,9 +60,10 @@ class ListPresenterTest {
                     i, "name_$i",
                     "overview_$i",
                     i.toFloat(),
-                    "path_$1"
+                    "path_$1",
+                    false
                 )
-            );
+            )
         }
 
         whenever(showData.shows).thenReturn(shows)
