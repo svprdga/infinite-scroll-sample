@@ -4,19 +4,19 @@ import com.google.gson.annotations.SerializedName
 import com.svprdga.infinitescrollsample.domain.Mockable
 
 @Mockable
-class PopularShowsResponse {
-    var page = 0
+data class PopularShowsResponse(
+    val page: Int = 0,
     @SerializedName("total_pages")
-    var totalPages = 0
-    var results: List<ShowEntity> = listOf()
-}
+    val totalPages: Int = 0,
+    val results: List<ShowEntity> = listOf()
+)
 
-class ShowEntity {
-    var id = -1
-    var name = ""
-    var overview = ""
+data class ShowEntity(
+    val id: Int = 0,
+    val name: String = "",
+    val overview: String = "",
     @SerializedName("vote_average")
-    var averageRating = 0.0f
+    val averageRating: Float = 0.0f,
     @SerializedName("poster_path")
-    var imagePath: String? = null
-}
+    val imagePath: String? = null
+)
