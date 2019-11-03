@@ -23,7 +23,7 @@ private const val RETRIES = 3
 
 val networkModule = module {
 
-    single<ApiClient> {
+    single {
         ApiClient(get(), get(), get(), BuildConfig.IMDB_API_KEY, get())
     }
 
