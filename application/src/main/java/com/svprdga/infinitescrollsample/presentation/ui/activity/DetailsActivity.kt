@@ -53,6 +53,8 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
 
         supportActionBar?.title = show.name
 
+        ratingBar.rating = show.averageRating / 2f
+
         presenter.show = show
         presenter.bind(this)
     }
