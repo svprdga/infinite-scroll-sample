@@ -67,6 +67,11 @@ class ListFragment : Fragment(), IListView {
         presenter.bind(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+        presenter.onStart()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.unBind()
@@ -99,5 +104,11 @@ class ListFragment : Fragment(), IListView {
 
     override fun hideErrorLayout() {
         errorLayout.visibility = View.GONE
+    }
+
+    override fun clearList() {
+        this.shows.clear()
+        showListAdapter?.clear()
+        showListAdapter?.notifyDataSetChanged()
     }
 }

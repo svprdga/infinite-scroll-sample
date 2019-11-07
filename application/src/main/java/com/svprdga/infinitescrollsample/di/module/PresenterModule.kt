@@ -25,6 +25,6 @@ val presenterModule = module {
     }
 
     factory<IDetailsPresenter> {
-        DetailsPresenter(get())
+        DetailsPresenter(get(), get(), get(), get())
     }
 }

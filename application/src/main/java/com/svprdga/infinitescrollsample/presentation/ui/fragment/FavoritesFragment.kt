@@ -58,6 +58,11 @@ class FavoritesFragment : Fragment(), IFavoritesView {
         presenter.bind(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+        presenter.onStart()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.unBind()
@@ -92,5 +97,11 @@ class FavoritesFragment : Fragment(), IFavoritesView {
     override fun removeShowFromList(position: Int) {
         shows.removeAt(position)
         adapter?.notifyItemRemoved(position)
+    }
+
+    override fun clearList() {
+        this.shows.clear()
+        adapter?.clear()
+        adapter?.notifyDataSetChanged()
     }
 }
