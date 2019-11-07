@@ -1,3 +1,4 @@
 <resources>
     <dimen name="app_bar_height">280dp</dimen>
+    <dimen name="slide_selector_text_size">12sp</dimen>
 </resources>
