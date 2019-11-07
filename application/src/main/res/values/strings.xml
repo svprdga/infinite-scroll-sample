@@ -24,4 +24,8 @@
     <string name="favorites_removed">Show removed from favorites</string>
     <string name="favorites_noFavoritesContentDescription">Image showing that there are no favorites.</string>
 
+    <!-- Details -->
+    <string name="details_headerContentDescription">Image showing the main cover for this show.</string>
+    <string name="details_ratingViewImageContentDescription">A face representing the rating of the TV show.</string>
+
 </resources>

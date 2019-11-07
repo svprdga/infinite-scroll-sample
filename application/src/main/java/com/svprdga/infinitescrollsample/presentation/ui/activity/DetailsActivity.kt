@@ -2,6 +2,7 @@ package com.svprdga.infinitescrollsample.presentation.ui.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.svprdga.infinitescrollsample.R
@@ -78,5 +79,13 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
 
     override fun setUncheckedFavoriteIcon() {
         favoriteButton.setImageResource(R.drawable.ic_favorite_border_white_24dp)
+    }
+
+    override fun showSmallPopup(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun startAnimations() {
+        ratingIcon.doAnimation()
     }
 }

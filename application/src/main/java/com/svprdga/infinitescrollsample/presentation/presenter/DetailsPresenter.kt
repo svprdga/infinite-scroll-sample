@@ -8,14 +8,17 @@ import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IDeta
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IDetailsView
 import com.svprdga.infinitescrollsample.util.Logger
 import com.svprdga.infinitescrollsample.util.TextProvider
+import com.svprdga.infinitescrollsample.util.abstraction.ITimer
 import io.reactivex.CompletableObserver
 import io.reactivex.disposables.Disposable
+
+private const val INIT_DELAY = 500L
 
 class DetailsPresenter(
     private val log: Logger,
     private val showsUseCase: ShowsUseCase,
     private val textProvider: TextProvider,
-    private val favoritesBus: FavoritesBus
+    private val timer: ITimer
     ) : IDetailsPresenter {
 
     // ****************************************** VARS ***************************************** //
@@ -32,12 +35,11 @@ class DetailsPresenter(
         override fun onComplete() {
             show?.isFavorite = false
             view?.setUncheckedFavoriteIcon()
-//            favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
         }
 
         override fun onError(e: Throwable) {
             e.message?.let { log.error(it) }
-//            view?.showSmallPopup(textProvider.unexpectedError)
+            view?.showSmallPopup(textProvider.unexpectedError)
         }
     }
 
@@ -48,13 +50,12 @@ class DetailsPresenter(
 
         override fun onComplete() {
             show?.isFavorite = true
-//            favoritesBus.setFavoriteEvent(FavoriteEvent(show!!, position))
             view?.setFavoriteIcon()
         }
 
         override fun onError(e: Throwable) {
             e.message?.let { log.error(it) }
-//            view?.showSmallPopup(textProvider.unexpectedError)
+            view?.showSmallPopup(textProvider.unexpectedError)
         }
     }
 
@@ -62,6 +63,13 @@ class DetailsPresenter(
 
     override fun bind(view: IDetailsView) {
         this.view = view
+
+        // Wait a little bit to start animations in order to give the user time to appreciate them.
+        timer.executeDelayed(object: ITimer.TimerCallback {
+            override fun onExecute() {
+                view.startAnimations()
+            }
+        }, INIT_DELAY)
     }
 
     override fun unBind() {
