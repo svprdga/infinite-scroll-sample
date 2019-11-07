@@ -1,5 +1,6 @@
 package com.svprdga.infinitescrollsample.presentation.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,10 @@ import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IFavoritesPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IFavoritesView
+import com.svprdga.infinitescrollsample.presentation.ui.activity.DetailsActivity
+import com.svprdga.infinitescrollsample.presentation.ui.activity.INTENT_SHOW
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
+import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import kotlinx.android.synthetic.main.fragment_list.recyclerView
 import org.koin.android.ext.android.inject
@@ -26,6 +30,14 @@ class FavoritesFragment : Fragment(), IFavoritesView {
 
     private var shows: MutableList<Show> = mutableListOf()
     private var adapter: ShowListAdapter? = null
+
+    private val showListener = object : ShowListener {
+        override fun onClick(show: Show) {
+            val intent = Intent(activity, DetailsActivity::class.java)
+            intent.putExtra(INTENT_SHOW, show)
+            startActivity(intent)
+        }
+    }
 
     // *************************************** LIFECYCLE *************************************** //
 
@@ -61,7 +73,7 @@ class FavoritesFragment : Fragment(), IFavoritesView {
         this.shows = shows.toMutableList()
 
         adapter =
-            ShowListAdapter(activity!!, this.shows)
+            ShowListAdapter(activity!!, this.shows, showListener)
         recyclerView.adapter = adapter
     }
 

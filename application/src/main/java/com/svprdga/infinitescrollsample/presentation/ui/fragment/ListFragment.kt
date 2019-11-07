@@ -1,5 +1,6 @@
 package com.svprdga.infinitescrollsample.presentation.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +12,12 @@ import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IListPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IListView
+import com.svprdga.infinitescrollsample.presentation.ui.activity.DetailsActivity
+import com.svprdga.infinitescrollsample.presentation.ui.activity.INTENT_SHOW
 import com.svprdga.infinitescrollsample.presentation.ui.extra.EndlessRecyclerViewScrollListener
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ItemDecoration
 import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListAdapter
+import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.koin.android.ext.android.inject
 
@@ -28,6 +32,14 @@ class ListFragment : Fragment(), IListView {
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
     private var shows: MutableList<Show> = mutableListOf()
     private var showListAdapter: ShowListAdapter? = null
+
+    private val showListener = object : ShowListener {
+        override fun onClick(show: Show) {
+            val intent = Intent(activity, DetailsActivity::class.java)
+            intent.putExtra(INTENT_SHOW, show)
+            startActivity(intent)
+        }
+    }
 
     // *************************************** LIFECYCLE *************************************** //
 
@@ -67,7 +79,7 @@ class ListFragment : Fragment(), IListView {
         shows.addAll(newShows)
 
         if (showListAdapter == null) {
-            showListAdapter = ShowListAdapter(activity!!, shows)
+            showListAdapter = ShowListAdapter(activity!!, shows, showListener)
             recyclerView.adapter = showListAdapter
         }
 

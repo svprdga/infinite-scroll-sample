@@ -9,7 +9,8 @@ import com.svprdga.infinitescrollsample.domain.Show
 
 class ShowListAdapter(
     private val context: Context,
-    private val shows: List<Show>
+    private val shows: List<Show>,
+    private val showListener: ShowListener
 ) : RecyclerView.Adapter<ShowView>() {
 
     // ************************************* PUBLIC METHODS ************************************ //
@@ -27,6 +28,6 @@ class ShowListAdapter(
 
     override fun onBindViewHolder(holder: ShowView, position: Int) {
         val show = shows[position]
-        holder.initializeView(show)
+        holder.initializeView(show, showListener)
     }
 }
