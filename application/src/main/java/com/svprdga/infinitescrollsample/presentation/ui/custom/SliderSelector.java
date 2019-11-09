@@ -14,6 +14,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +26,7 @@ import com.svprdga.infinitescrollsample.presentation.ui.extra.Design;
 
 public class SliderSelector extends View {
 
-    public static final String TAG = "end_session_slide_2";
+    // *************************************** CONSTANTS *************************************** //
 
     public static final int THEME_LIGHT                             = 0;
     public static final int THEME_DARK                              = 1;
@@ -50,9 +51,7 @@ public class SliderSelector extends View {
     // to the center of the selected side.
     public static final float SELECTION_SENSIVITY                   = 0.6f;
 
-    // ********************************************************************************************
-    // DRAWING SPECS.
-    // ********************************************************************************************
+    // *************************************** MEASURES **************************************** //
 
     private static final int SIZE_RADIUS_ORIGIN_PX                  = 28;
     private static float SIZE_RADIUS_ORIGIN;
@@ -132,11 +131,7 @@ public class SliderSelector extends View {
     private static final float BORDER_ROUND_ORIGIN_SQUARE_PX        = 3f;
     private static float BORDER_ROUND_ORIGIN_SQUARE;
 
-
-
-    // ********************************************************************************************
-    // VARS.
-    // ********************************************************************************************
+    // ****************************************** VARS ***************************************** //
 
     private int mWidth;
     private int mHeight;
@@ -210,6 +205,8 @@ public class SliderSelector extends View {
     private Path mBackgroundShapePath;
     private boolean mStartedFromOrigin = false;
     private boolean mBackgroundDissapearNotified = false;
+
+    // ************************************** CONSTRUCTORS ************************************* //
 
     /**
      * Instance a new End Session Slide Slector 2.
@@ -301,10 +298,6 @@ public class SliderSelector extends View {
         mOriginPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mOriginPaint.setColor(COLOR_BACKGROUND_ORIGIN);
 
-//        mOriginPaint.setShadowLayer(
-//                RADIUS_ORIGIN_SHADOW_BLUR, 0, SIZE_ORIGIN_Y_OFFSET, COLOR_ORIGIN_END_SHADOW);
-//        setLayerType(LAYER_TYPE_SOFTWARE, mOriginPaint);
-
         mOptionPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mOptionPaint.setColor(COLOR_BACKGROUND_OPTION);
 
@@ -341,21 +334,163 @@ public class SliderSelector extends View {
 
     }
 
+    // ************************************* PUBLIC METHODS ************************************ //
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+
+        if (mState == STATE_SELECTED_LEFT || mState == STATE_SELECTED_RIGHT){
+            return false;
+        }
+
+        final int action = MotionEventCompat.getActionMasked(event);
+
+        switch(action){
+            case MotionEvent.ACTION_DOWN:
+
+                mHasMoved = false;
+                mFirstMove = true;
+
+                final int pointerIndex = MotionEventCompat.getActionIndex(event);
+                final float x = MotionEventCompat.getX(event, pointerIndex);
+
+                // If the click is over the origin, begin the translation.
+                float leftLimit = mOriginInitX - SIZE_RADIUS_ORIGIN;
+                float rightLimit = mOriginInitX + SIZE_RADIUS_ORIGIN;
+
+                if (x > leftLimit && x < rightLimit){
+                    mState = STATE_MOVING;
+                    mStartedFromOrigin = true;
+                }
+
+                mActivePointerId = MotionEventCompat.getPointerId(event, 0);
+
+                // Background stuff.
+                if (mStateB == STATEB_HIDE){
+                    mStateB = STATEB_FADE_IN;
+                    invalidate();
+                }
+
+                notifyUserTouch(true);
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+
+                if (mState == STATE_MOVING){
+
+                    final int pointerIndex0 =
+                            MotionEventCompat.findPointerIndex(event, mActivePointerId);
+
+                    mCurrentFingerX = MotionEventCompat.getX(event, pointerIndex0);
+
+                    // Options enabled/disabled.
+                    if (!mIsLeftOptionEnabled){
+                        if (mCurrentFingerX < mOriginInitX){
+                            mCurrentFingerX = mOriginInitX;
+                        }
+                    }
+
+                    if (!mIsRightOptionEnabled){
+                        if (mCurrentFingerX > mOriginInitX){
+                            mCurrentFingerX = mOriginInitX;
+                        }
+                    }
+
+                    if (mFirstMove){
+                        mPreviousFingerX = mCurrentFingerX;
+                        mFirstMove = false;
+                    }
+
+                    if (!mHasMoved){
+                        if (mCurrentFingerX != mPreviousFingerX) mHasMoved = true;
+                    } else {
+                        mPreviousFingerX = mCurrentFingerX;
+                    }
+
+                    invalidate();
+
+                }
+
+                break;
+            case MotionEvent.ACTION_UP:
+
+                if (!mIsLeftOptionEnabled && mListener != null && mStartedFromOrigin){
+
+                    final int pointerIndex0 =
+                            MotionEventCompat.findPointerIndex(event, mActivePointerId);
+                    float x0 = MotionEventCompat.getX(event, pointerIndex0);
+
+                    if (x0 > mLeftOptionSelectableAreaLeftLimit &&
+                            x0 < mLeftOptionSelectableAreaRightLimit){
+                        mListener.onLeftDisabledOptionSelected();
+                    }
+
+                }
+
+                if (!mIsRightOptionEnabled && mListener != null && mStartedFromOrigin){
+                    final int pointerIndex0 =
+                            MotionEventCompat.findPointerIndex(event, mActivePointerId);
+                    float x0 = MotionEventCompat.getX(event, pointerIndex0);
+
+                    if (x0 > mRightOptionSelectableAreaLeftLimit &&
+                            x0 < mRightOptionSelectableAreaRightLimit){
+                        mListener.onRightDisabledOptionSelected();
+                    }
+                }
+
+                mActivePointerId = INVALID_POINTER_ID;
+                decideCurrentState();
+                invalidate();
+
+                notifyUserTouch(false);
+                mStartedFromOrigin = false;
+
+                break;
+            case MotionEvent.ACTION_CANCEL:
+
+                mActivePointerId = INVALID_POINTER_ID;
+
+                decideCurrentState();
+                invalidate();
+
+                mCurrentFingerX = mOriginInitX;
+//                mUserTouch = false;
+                notifyUserTouch(false);
+                mStartedFromOrigin = false;
+
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+
+                final int pointerIndex1 = MotionEventCompat.getActionIndex(event);
+                final int pointerId = MotionEventCompat.getPointerId(event, pointerIndex1);
+
+                if (pointerId == mActivePointerId){
+                    // This is our active pointer going up.
+                    decideCurrentState();
+                    mCurrentFingerX = mOriginInitX;
+                    invalidate();
+                    notifyUserTouch(false);
+                    mStartedFromOrigin = false;
+                }
+
+                break;
+        }
+
+        return true;
+    }
+
+    // *********************************** PROTECTED METHODS *********************************** //
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 
-//        float height = SIZE_MARGIN_TOP_BACKGROUND_SHAPE + SIZE_HEIGHT_BACKGROUND_SHAPE +
-//                SIZE_MARGIN_BOTTOM_BACKGROUND_SHAPE;
-//
-//        int finalHeight = (int) Math.ceil(height);
         this.setMeasuredDimension(parentWidth, parentHeight);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         // Save this object measures.
         mHeight = parentHeight;
-//        mHeight = finalHeight;
         mWidth = parentWidth;
 
         // Calcule some values.
@@ -432,6 +567,8 @@ public class SliderSelector extends View {
         }
 
     }
+
+    // ************************************ PRIVATE METHODS ************************************ //
 
     /**
      * This method handles the drawing of the origin and the options.
@@ -736,144 +873,6 @@ public class SliderSelector extends View {
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-
-        if (mState == STATE_SELECTED_LEFT || mState == STATE_SELECTED_RIGHT){
-            return false;
-        }
-
-        final int action = MotionEventCompat.getActionMasked(event);
-
-        switch(action){
-            case MotionEvent.ACTION_DOWN:
-
-                mHasMoved = false;
-                mFirstMove = true;
-
-                final int pointerIndex = MotionEventCompat.getActionIndex(event);
-                final float x = MotionEventCompat.getX(event, pointerIndex);
-
-                // If the click is over the origin, begin the translation.
-                float leftLimit = mOriginInitX - SIZE_RADIUS_ORIGIN;
-                float rightLimit = mOriginInitX + SIZE_RADIUS_ORIGIN;
-
-                if (x > leftLimit && x < rightLimit){
-                    mState = STATE_MOVING;
-                    mStartedFromOrigin = true;
-                }
-
-                mActivePointerId = MotionEventCompat.getPointerId(event, 0);
-
-                // Background stuff.
-                if (mStateB == STATEB_HIDE){
-                    mStateB = STATEB_FADE_IN;
-                    invalidate();
-                }
-
-                notifyUserTouch(true);
-
-                break;
-            case MotionEvent.ACTION_MOVE:
-
-                if (mState == STATE_MOVING){
-
-                    final int pointerIndex0 =
-                            MotionEventCompat.findPointerIndex(event, mActivePointerId);
-
-                    mCurrentFingerX = MotionEventCompat.getX(event, pointerIndex0);
-
-                    // Options enabled/disabled.
-                    if (!mIsLeftOptionEnabled){
-                        if (mCurrentFingerX < mOriginInitX){
-                            mCurrentFingerX = mOriginInitX;
-                        }
-                    }
-
-                    if (!mIsRightOptionEnabled){
-                        if (mCurrentFingerX > mOriginInitX){
-                            mCurrentFingerX = mOriginInitX;
-                        }
-                    }
-
-                    if (mFirstMove){
-                        mPreviousFingerX = mCurrentFingerX;
-                        mFirstMove = false;
-                    }
-
-                    if (!mHasMoved){
-                        if (mCurrentFingerX != mPreviousFingerX) mHasMoved = true;
-                    } else {
-                        mPreviousFingerX = mCurrentFingerX;
-                    }
-
-                    invalidate();
-
-                }
-
-                break;
-            case MotionEvent.ACTION_UP:
-
-                if (!mIsLeftOptionEnabled && mListener != null && mStartedFromOrigin){
-
-                    final int pointerIndex0 =
-                            MotionEventCompat.findPointerIndex(event, mActivePointerId);
-                    float x0 = MotionEventCompat.getX(event, pointerIndex0);
-
-                    if (x0 > mLeftOptionSelectableAreaLeftLimit &&
-                            x0 < mLeftOptionSelectableAreaRightLimit){
-                        mListener.onLeftDisabledOptionSelected();
-                    }
-
-                }
-
-                if (!mIsRightOptionEnabled && mListener != null && mStartedFromOrigin){
-                    final int pointerIndex0 =
-                            MotionEventCompat.findPointerIndex(event, mActivePointerId);
-                    float x0 = MotionEventCompat.getX(event, pointerIndex0);
-
-                    if (x0 > mRightOptionSelectableAreaLeftLimit &&
-                            x0 < mRightOptionSelectableAreaRightLimit){
-                        mListener.onRightDisabledOptionSelected();
-                    }
-                }
-
-                mActivePointerId = INVALID_POINTER_ID;
-                decideCurrentState();
-                invalidate();
-
-                notifyUserTouch(false);
-                mStartedFromOrigin = false;
-
-                break;
-            case MotionEvent.ACTION_CANCEL:
-
-                mActivePointerId = INVALID_POINTER_ID;
-                mCurrentFingerX = mOriginInitX;
-                mUserTouch = false;
-                mStartedFromOrigin = false;
-
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-
-                final int pointerIndex1 = MotionEventCompat.getActionIndex(event);
-                final int pointerId = MotionEventCompat.getPointerId(event, pointerIndex1);
-
-                if (pointerId == mActivePointerId){
-                    // This is our active pointer going up.
-                    decideCurrentState();
-                    mCurrentFingerX = mOriginInitX;
-                    invalidate();
-                    notifyUserTouch(false);
-                    mStartedFromOrigin = false;
-                }
-
-                break;
-        }
-
-        return true;
-    }
-
     /**
      * Decide the state of the getView based on multiple factors when the click is released.
      */
@@ -1161,42 +1160,42 @@ public class SliderSelector extends View {
         /**
          * The user has selected the left option.
          */
-        public void onLeftOptionSelected();
+        void onLeftOptionSelected();
 
         /**
          * The user has selected the right option.
          */
-        public void onRightOptionSelected();
+        void onRightOptionSelected();
 
         /**
          * The user has made an attempt to select the left option which is disabled.
          */
-        public void onLeftDisabledOptionSelected();
+        void onLeftDisabledOptionSelected();
 
         /**
          * The user has made an attempt to select the right option which is disabled.
          */
-        public void onRightDisabledOptionSelected();
+        void onRightDisabledOptionSelected();
 
         /**
          * The user has begun to touch the getView.
          */
-        public void onTouch();
+        void onTouch();
 
         /**
          * The user has released the finger from the getView.
          */
-        public void onTouchRelease();
+        void onTouchRelease();
 
         /**
          * The white background starts to dissapear.
          */
-        public void onBackgroundDissapear();
+        void onBackgroundDissapear();
 
     }
 
     /**
-     * Set an {@link EndSessionSlideSelector2.OnOptionSelectedListener} in order to receive event
+     * Set an {@link SliderSelector.OnOptionSelectedListener} in order to receive event
      * callbacks.
      * @param listener
      */
@@ -1223,10 +1222,10 @@ public class SliderSelector extends View {
 
     /**
      * Set a theme to the widget.
-     * @param theme Theme to set, an be either: <br/>
+     * @param theme Theme to set, can be either: <br/>
      *              <ul>
-     *                  <li>{@link EndSessionSlideSelector2#THEME_LIGHT}</li>
-     *                  <li>{@link EndSessionSlideSelector2#THEME_DARK}</li>
+     *                  <li>{@link SliderSelector#THEME_LIGHT}</li>
+     *                  <li>{@link SliderSelector#THEME_DARK}</li>
      *              </ul>
      */
     public void setTheme(int theme){

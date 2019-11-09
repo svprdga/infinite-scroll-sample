@@ -2,6 +2,8 @@ package com.svprdga.infinitescrollsample.presentation.ui.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -9,6 +11,7 @@ import com.svprdga.infinitescrollsample.R
 import com.svprdga.infinitescrollsample.domain.Show
 import com.svprdga.infinitescrollsample.presentation.presenter.abstraction.IDetailsPresenter
 import com.svprdga.infinitescrollsample.presentation.presenter.view.IDetailsView
+import com.svprdga.infinitescrollsample.presentation.ui.custom.SliderSelector
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import org.koin.android.ext.android.inject
@@ -54,6 +57,8 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
         supportActionBar?.title = show.name
 
         ratingBar.rating = show.averageRating / 2f
+        textView.text = show.overview
+        addSlider()
 
         presenter.show = show
         presenter.bind(this)
@@ -89,5 +94,30 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
 
     override fun startAnimations() {
         ratingIcon.doAnimation()
+    }
+
+    // ************************************ PRIVATE METHODS ************************************ //
+
+    private fun addSlider() {
+        val selector = SliderSelector(
+            this, null, R.mipmap.ic_buy,
+            R.mipmap.ic_buy,
+            true, R.mipmap.round_error_outline_black_48,
+            R.mipmap.round_error_outline_black_48,
+            true, getString(R.string.details_drag),
+            getString(R.string.details_buy),
+            getString(R.string.details_rent),
+            SliderSelector.THEME_DARK
+        )
+
+        val params = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        )
+
+        selector.layoutParams = params
+
+//        selector.setOnOptionSelectedListener(getOptionsForEndSession())
+
+        sliderContainer.addView(selector)
     }
 }
