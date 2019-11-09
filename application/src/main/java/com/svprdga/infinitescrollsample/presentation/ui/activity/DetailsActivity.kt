@@ -14,6 +14,7 @@ import com.svprdga.infinitescrollsample.presentation.presenter.view.IDetailsView
 import com.svprdga.infinitescrollsample.presentation.ui.custom.SliderSelector
 import kotlinx.android.synthetic.main.activity_details.*
 import kotlinx.android.synthetic.main.activity_main.toolbar
+import kotlinx.android.synthetic.main.scroll_content.*
 import org.koin.android.ext.android.inject
 
 const val INTENT_SHOW = "show"
@@ -23,6 +24,38 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
     // ************************************* INJECTED VARS ************************************* //
 
     val presenter: IDetailsPresenter by inject()
+
+    // ****************************************** VARS ***************************************** //
+
+    private val listener = object : SliderSelector.OnOptionSelectedListener {
+        override fun onBackgroundDissapear() {
+            // Not needed.
+        }
+
+        override fun onLeftDisabledOptionSelected() {
+            // Not needed.
+        }
+
+        override fun onLeftOptionSelected() {
+            presenter.onBuy()
+        }
+
+        override fun onRightDisabledOptionSelected() {
+            // Not needed.
+        }
+
+        override fun onRightOptionSelected() {
+            presenter.onRent()
+        }
+
+        override fun onTouch() {
+            // Not needed.
+        }
+
+        override fun onTouchRelease() {
+            // Not needed.
+        }
+    }
 
     // *************************************** LIFECYCLE *************************************** //
 
@@ -57,7 +90,7 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
         supportActionBar?.title = show.name
 
         ratingBar.rating = show.averageRating / 2f
-        textView.text = show.overview
+        textView.text = "${show.overview}\n${getString(R.string.details_simulatedLargeDescription)}"
         addSlider()
 
         presenter.show = show
@@ -110,14 +143,10 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
             SliderSelector.THEME_DARK
         )
 
-        val params = RelativeLayout.LayoutParams(
+        selector.layoutParams = RelativeLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
         )
-
-        selector.layoutParams = params
-
-//        selector.setOnOptionSelectedListener(getOptionsForEndSession())
-
+        selector.setOnOptionSelectedListener(listener)
         sliderContainer.addView(selector)
     }
 }

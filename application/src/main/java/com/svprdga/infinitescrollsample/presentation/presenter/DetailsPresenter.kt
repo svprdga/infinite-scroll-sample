@@ -88,4 +88,13 @@ class DetailsPresenter(
         }
     }
 
+
+    override fun onBuy() {
+        view?.showSmallPopup(textProvider.itemBought)
+    }
+
+    override fun onRent() {
+        view?.showSmallPopup(textProvider.itemRented)
+    }
+
 }

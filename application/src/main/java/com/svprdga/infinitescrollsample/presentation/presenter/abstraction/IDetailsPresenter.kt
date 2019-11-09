@@ -12,4 +12,14 @@ interface IDetailsPresenter : IPresenter<IDetailsView> {
      */
     fun favoriteButtonClick()
 
+    /**
+     * The user wants to buy the show.
+     */
+    fun onBuy()
+
+    /**
+     * The user wants to rent the show.
+     */
+    fun onRent()
+
 }

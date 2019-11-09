@@ -30,5 +30,14 @@
     <string name="details_buy">Buy</string>
     <string name="details_rent">Rent</string>
     <string name="details_drag">Drag</string>
+    <string name="details_bought">Item bought!</string>
+    <string name="details_rented">Item rented!</string>
+    <string name="details_simulatedLargeDescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque metus lorem, lobortis a scelerisque ut, iaculis eget arcu. Morbi sit amet consequat urna. Pellentesque ultricies ut enim ut accumsan. Nam aliquam ex in felis congue aliquam. Nulla nisl nulla, interdum eu augue ac, facilisis porttitor ante. In hac habitasse platea dictumst. Mauris sit amet dictum velit. Duis id nisi dignissim, ornare enim a, egestas massa. Nunc non dui non urna tincidunt eleifend sit amet vitae orci. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas non odio massa. Nullam orci justo, cursus eu neque et, luctus maximus turpis. In vitae urna sem. Etiam id arcu tempus nunc malesuada sagittis. Proin placerat interdum nisi, nec feugiat diam sagittis a.
+
+Integer rutrum ligula ac libero varius, sed suscipit ante laoreet. In rhoncus, elit non feugiat luctus, nibh risus facilisis odio, quis varius turpis mauris sit amet orci. Sed faucibus sodales auctor. Pellentesque maximus rhoncus magna vitae fringilla. Donec augue dui, elementum at rhoncus eu, bibendum finibus tortor. Curabitur id diam auctor, dapibus nunc id, ornare arcu. Nulla sit amet fermentum ligula. Nullam et orci enim. Sed vitae luctus eros. Vestibulum iaculis cursus massa vel blandit. Donec at egestas mauris.
+
+Quisque at enim condimentum, ornare elit vitae, imperdiet mauris. Aliquam scelerisque ante nunc, vitae vestibulum urna molestie sagittis. Cras vel mauris gravida, gravida nunc ac, semper nisl. Proin sollicitudin malesuada lorem et interdum. Sed eu nisl sapien. Curabitur vulputate nisl tellus, sit amet malesuada justo dignissim aliquam. Vestibulum hendrerit, sem auctor accumsan molestie, mauris ipsum posuere ante, id aliquam mi ante nec quam. Nulla sodales posuere fermentum. Fusce nec tellus at libero interdum venenatis accumsan at dui. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam auctor id nisl a interdum.
+
+Ut faucibus feugiat leo et porttitor. Suspendisse luctus porta nisi ut consequat. Donec vel nibh eleifend, congue metus eu, hendrerit mauris. Nullam eu luctus metus. Vivamus luctus commodo fringilla. Nunc pellentesque, tortor quis iaculis ultrices, lorem eros rutrum eros, eu dapibus massa nulla vitae tortor. Quisque in tempus mi. Praesent risus nisl, tempor eget massa eu, porttitor vestibulum lorem. Suspendisse molestie mi tellus. Nunc porttitor hendrerit euismod. Praesent ex sapien, porttitor quis fringilla ut, maximus eu nisi. Aenean vel augue in est luctus aliquam in sed sapien.</string>
 
 </resources>
