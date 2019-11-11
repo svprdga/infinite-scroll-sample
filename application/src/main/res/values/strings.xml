@@ -27,6 +27,7 @@
     <!-- Details -->
     <string name="details_headerContentDescription">Image showing the main cover for this show.</string>
     <string name="details_ratingViewImageContentDescription">A face representing the rating of the TV show.</string>
+    <string name="details_buyRentExplanation">Click \&amp; drag to buy or rent this show:</string>
     <string name="details_buy">Buy</string>
     <string name="details_rent">Rent</string>
     <string name="details_drag">Drag</string>
