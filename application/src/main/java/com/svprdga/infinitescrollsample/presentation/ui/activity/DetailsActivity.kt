@@ -49,11 +49,12 @@ class DetailsActivity : AppCompatActivity(), IDetailsView {
         }
 
         override fun onTouch() {
-            // Not needed.
+            // Disable scroll to better interact with the slider.
+            scrollView.isScrollable = false
         }
 
         override fun onTouchRelease() {
-            // Not needed.
+            scrollView.isScrollable = true
         }
     }
 
