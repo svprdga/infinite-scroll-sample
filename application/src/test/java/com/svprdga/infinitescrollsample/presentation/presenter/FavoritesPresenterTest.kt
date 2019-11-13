@@ -88,12 +88,17 @@ class FavoritesPresenterTest {
 
     // ***************************************** TESTS ***************************************** //
 
-    inner class `when calling bind()` {
+    inner class `when calling onStart()` {
+
+        @Before
+        fun setUp() {
+            presenter.bind(view)
+        }
 
         @Test
         fun `should fetch initial set of items`() {
             whenever(showsUseCase.findAllFavoritesAsync()).thenReturn(singleSuccess)
-            presenter.bind(view)
+            presenter.onStart()
             verify(showsUseCase).findAllFavoritesAsync()
         }
 
@@ -106,7 +111,7 @@ class FavoritesPresenterTest {
 
             @Test
             fun `should show empty favorites layout in view`() {
-                presenter.bind(view)
+                presenter.onStart()
                 verify(view).showEmptyFavoritesLayout()
             }
         }
@@ -115,7 +120,7 @@ class FavoritesPresenterTest {
 
             @Before
             fun setUp() {
-                presenter.bind(view)
+                presenter.onStart()
             }
 
             @Test
@@ -134,7 +139,7 @@ class FavoritesPresenterTest {
             @Before
             fun setUp() {
                 whenever(showsUseCase.findAllFavoritesAsync()).thenReturn(singleError)
-                presenter.bind(view)
+                presenter.onStart()
             }
 
             @Test

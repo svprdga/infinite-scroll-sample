@@ -73,16 +73,17 @@ class ListPresenterTest {
 
     // ***************************************** TESTS ***************************************** //
 
-    inner class `when calling bind()` {
+    inner class `when calling onStart()` {
 
         @Before
         fun setUp() {
             whenever(showsUseCase.findPopularShows(1)).thenReturn(singleSuccess)
+            presenter.bind(view)
         }
 
         @Test
         fun `should fetch initial set of items`() {
-            presenter.bind(view)
+            presenter.onStart()
             verify(showsUseCase).findPopularShows(1)
         }
 
@@ -90,7 +91,7 @@ class ListPresenterTest {
 
             @Test
             fun `should display fetched items in view`() {
-                presenter.bind(view)
+                presenter.onStart()
                 verify(view).appendShows(showData.shows)
             }
 
@@ -101,7 +102,7 @@ class ListPresenterTest {
             @Before
             fun setUp() {
                 whenever(showsUseCase.findPopularShows(1)).thenReturn(singleError)
-                presenter.bind(view)
+                presenter.onStart()
             }
 
             @Test
@@ -127,6 +128,7 @@ class ListPresenterTest {
                 whenever(showsUseCase.findPopularShows(1)).thenReturn(singleSuccess)
                 whenever(showData.isLastPage).thenReturn(true)
                 presenter.bind(view)
+                presenter.onStart()
                 presenter.loadNextShowSet()
             }
 
@@ -145,6 +147,7 @@ class ListPresenterTest {
                 whenever(showsUseCase.findPopularShows(2)).thenReturn(singleSuccess)
                 whenever(showData.isLastPage).thenReturn(false)
                 presenter.bind(view)
+                presenter.onStart()
                 presenter.loadNextShowSet()
             }
 
