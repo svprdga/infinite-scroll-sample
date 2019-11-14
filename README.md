@@ -8,7 +8,7 @@ scrolls down then another page of results will be dynamically loaded and added t
 
 ## Contents of this sample
 
-- Android development with Kotlin and [AndroidX](https://developer.android.com/jetpack/androidx) libraries.
+- Android development with [Kotlin](https://kotlinlang.org/) and [AndroidX](https://developer.android.com/jetpack/androidx) libraries.
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) with [Model-View-Presenter](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter) for the presentation layer.
 - Dependency injection with [Koin](https://insert-koin.io/).
 - Reactive programming with [RxKotlin](https://github.com/ReactiveX/RxKotlin) & [RxAndroid](https://github.com/ReactiveX/RxAndroid).
