@@ -16,8 +16,8 @@ android {
         applicationId "com.svprdga.infinitescrollsample"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 3
-        versionName "1.1.1"
+        versionCode 4
+        versionName "1.2.0"
         testInstrumentationRunner "com.svprdga.infinitescrollsample.uitest.custom.CustomTestRunner"
 
         buildConfigField("String", "IMDB_API_KEY", apikeyProperties["IMDB_API_KEY"])
