@@ -14,7 +14,6 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -1178,7 +1177,7 @@ public class SliderSelector extends View {
         void onRightDisabledOptionSelected();
 
         /**
-         * The user has begun to touch the getView.
+         * The user has begun to touch the view.
          */
         void onTouch();
 
