@@ -16,6 +16,13 @@ import org.koin.core.inject
 
 private const val CARD_CORNER_RADIUS = 20
 
+interface ShowListener {
+    /**
+     * The user clicked on the Show entry.
+     */
+    fun onClick(show: Show)
+}
+
 class ShowView(private val context: Context, view: View) : IShowView, RecyclerView.ViewHolder(view),
     KoinComponent {
 
@@ -42,7 +49,7 @@ class ShowView(private val context: Context, view: View) : IShowView, RecyclerVi
 
     // ************************************* PUBLIC METHODS ************************************ //
 
-    fun initializeView(show: Show) {
+    fun initializeView(show: Show, listener: ShowListener) {
         presenter.show = show
         presenter.bind(this)
 
@@ -69,6 +76,10 @@ class ShowView(private val context: Context, view: View) : IShowView, RecyclerVi
 
         favoriteButton.setOnClickListener {
             presenter.favoriteButtonClick(layoutPosition)
+        }
+
+        cardView.setOnClickListener {
+            listener.onClick(show)
         }
     }
 

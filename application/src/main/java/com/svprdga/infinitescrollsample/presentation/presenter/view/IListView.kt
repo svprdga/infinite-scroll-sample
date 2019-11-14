@@ -26,4 +26,9 @@ interface IListView : IView {
      * Hides the error layout.
      */
     fun hideErrorLayout()
+
+    /**
+     * Clears the show list.
+     */
+    fun clearList()
 }

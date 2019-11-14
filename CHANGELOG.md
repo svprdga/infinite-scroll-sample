@@ -1,6 +1,11 @@
 # Change Log
 
-## [1.1.1]- 2019-11-03
+## [1.2.0] - 2019-11-14
+### Added
+- New details screen with a simple animation and a custom widget.
+- Instrumentation tests.
+
+## [1.1.1] - 2019-11-03
 ### Fixed
 - Make application always go back in the apps stack when pressing back button.
 

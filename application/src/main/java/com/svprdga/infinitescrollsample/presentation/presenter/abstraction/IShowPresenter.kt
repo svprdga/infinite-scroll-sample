@@ -8,7 +8,7 @@ interface IShowPresenter : IPresenter<IShowView> {
     var show: Show?
 
     /**
-     * The user clicked on the favorite button to mark/unmkar the favorite state.
+     * The user clicked on the favorite button to mark/unmark the favorite state.
      *
      * @param itemPosition The position of the view within the list.
      */

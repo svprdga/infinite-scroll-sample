@@ -40,8 +40,11 @@ class ListPresenter(
 
     override fun bind(view: IListView) {
         this.view = view
+    }
 
+    override fun onStart() {
         // Fetch first items.
+        view?.clearList()
         showsUseCase.findPopularShows(currentPage)
             .subscribe(popularShowsObserver)
     }
