@@ -71,8 +71,11 @@ class FavoritesPresenter(
     override fun bind(view: IFavoritesView) {
         this.view = view
         favoritesBus.getFavoriteEvent().subscribe(favoriteDisposable)
+    }
 
+    override fun onStart() {
         // Load the favorites list.
+        view?.clearList()
         showsUseCase.findAllFavoritesAsync()
             .subscribe(observer)
     }

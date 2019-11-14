@@ -36,4 +36,9 @@ interface IFavoritesView : IView {
      */
     fun removeShowFromList(position: Int)
 
+    /**
+     * Clears the show list.
+     */
+    fun clearList()
+
 }

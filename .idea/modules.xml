@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Infinite Scroll Sample.iml" filepath="$PROJECT_DIR$/Infinite Scroll Sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/application/application.iml" filepath="$PROJECT_DIR$/application/application.iml" />
+      <module fileurl="file://$PROJECT_DIR$/infinite-scroll-sample-Infinite Scroll Sample.iml" filepath="$PROJECT_DIR$/infinite-scroll-sample-Infinite Scroll Sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/application/infinite-scroll-sample-application.iml" filepath="$PROJECT_DIR$/application/infinite-scroll-sample-application.iml" />
     </modules>
   </component>
 </project>
