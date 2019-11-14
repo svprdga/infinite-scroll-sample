@@ -21,7 +21,7 @@ import com.svprdga.infinitescrollsample.presentation.ui.extra.ShowListener
 import kotlinx.android.synthetic.main.fragment_list.*
 import org.koin.android.ext.android.inject
 
-class ListFragment : Fragment(), IListView {
+class ListFragment : BaseFragment(), IListView {
 
     // ************************************* INJECTED VARS ************************************* //
 
@@ -65,6 +65,7 @@ class ListFragment : Fragment(), IListView {
         recyclerView.addItemDecoration(ItemDecoration(context!!))
 
         presenter.bind(this)
+        registerIdleResource("stop")
     }
 
     override fun onStart() {
@@ -92,6 +93,7 @@ class ListFragment : Fragment(), IListView {
 
             adapter?.notifyItemRangeChanged(0, shows.size - 1)
         }
+        unregisterIdleResource("stop")
     }
 
     override fun hideListLayout() {
